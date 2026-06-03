@@ -29,10 +29,10 @@ function predictGrade(cie, expectedSEE) {
   return 'F'
 }
 
-function seeNeeded(cie, threshold) {
+function seeNeeded(cie, threshold, maxSee = 50) {
   const needed = threshold - cie
   if (needed <= 0) return { status: 'achieved', needed: 0 }
-  if (needed > 50)  return { status: 'impossible', needed }
+  if (needed > maxSee)  return { status: 'impossible', needed }
   return { status: 'possible', needed }
 }
 
@@ -74,6 +74,9 @@ function initCourse(c) {
 function cieTot(marks, mode) {
   if (mode === 'practical') {
     return (Number(marks.dayToDay) || 0) + (Number(marks.skillTest) || 0)
+  }
+  if (mode === 'exploratory') {
+    return (Number(marks.mid1) || 0) + (Number(marks.mid2) || 0)
   }
   return (Number(marks.mid1) || 0) + (Number(marks.mid2) || 0) + (Number(marks.assignment) || 0)
 }
@@ -118,7 +121,7 @@ function CIEBlock({ marks, onChange, prefix, mode = 'theory' }) {
         {mode === 'exploratory' ? (
           <>
             <div className="cie-field">
-              <span className="cie-label">Mid-1 <span style={{ color: 'var(--text-muted)' }}>/40</span></span>
+              <span className="cie-label">Assessment 1 <span style={{ color: 'var(--text-muted)' }}>/40</span></span>
               <input
                 id={`${prefix}-mid1`}
                 type="number" min={0} max={40}
@@ -131,26 +134,13 @@ function CIEBlock({ marks, onChange, prefix, mode = 'theory' }) {
             <span className="cie-divider">+</span>
 
             <div className="cie-field">
-              <span className="cie-label">Mid-2 <span style={{ color: 'var(--text-muted)' }}>/40</span></span>
+              <span className="cie-label">Assessment 2 <span style={{ color: 'var(--text-muted)' }}>/40</span></span>
               <input
                 id={`${prefix}-mid2`}
                 type="number" min={0} max={40}
                 className="cie-input"
                 value={marks.mid2 ?? ''}
                 onChange={handleNum('mid2', 40)}
-                placeholder="0"
-              />
-            </div>
-            <span className="cie-divider">+</span>
-
-            <div className="cie-field">
-              <span className="cie-label">Assignment <span style={{ color: 'var(--text-muted)' }}>/20</span></span>
-              <input
-                id={`${prefix}-asgn`}
-                type="number" min={0} max={20}
-                className="cie-input"
-                value={marks.assignment ?? ''}
-                onChange={handleNum('assignment', 20)}
                 placeholder="0"
               />
             </div>
@@ -229,19 +219,20 @@ function CIEBlock({ marks, onChange, prefix, mode = 'theory' }) {
         <div className="cie-total">
           <span className="cie-label">CIE Total</span>
           <span className="cie-total-value" style={{
-            color: cie >= (mode === 'exploratory' ? 40 : 20) ? 'var(--accent)' : cie > 0 ? 'var(--orange)' : 'var(--text-muted)'
+            color: cie >= (mode === 'exploratory' ? 32 : 20) ? 'var(--accent)' : cie > 0 ? 'var(--orange)' : 'var(--text-muted)'
           }}>
-            {cie}<span style={{ fontSize: '13px', fontWeight: 400, color: 'var(--text-muted)' }}>/{mode === 'exploratory' ? '100' : '50'}</span>
+            {cie}<span style={{ fontSize: '13px', fontWeight: 400, color: 'var(--text-muted)' }}>/{mode === 'exploratory' ? '80' : '50'}</span>
           </span>
         </div>
       </div>
 
-      {/* SEE needed chips — only show when CIE > 0 and mode is not exploratory */}
-      {cie > 0 && mode !== 'exploratory' && (
+      {/* SEE needed chips */}
+      {cie > 0 && (
         <div className="see-needed-row">
           <span className="see-needed-label">SEE needed →</span>
           {GRADE_THRESHOLDS.map(({ grade: g, label, min }) => {
-            const { status, needed } = seeNeeded(cie, min)
+            const maxSee = mode === 'exploratory' ? 20 : 50
+            const { status, needed } = seeNeeded(cie, min, maxSee)
             return (
               <span
                 key={g}
@@ -252,8 +243,8 @@ function CIEBlock({ marks, onChange, prefix, mode = 'theory' }) {
               >
                 <strong>{label}:</strong>{' '}
                 {status === 'achieved'   ? '✓ Done' :
-                 status === 'impossible' ? `${needed}/50 ✗` :
-                 `${needed}/50`}
+                 status === 'impossible' ? `${needed}/${maxSee} ✗` :
+                 `${needed}/${maxSee}`}
               </span>
             )
           })}
@@ -261,63 +252,43 @@ function CIEBlock({ marks, onChange, prefix, mode = 'theory' }) {
       )}
 
       {/* Expected SEE + predicted grade */}
-      {mode !== 'exploratory' && (
-        <div className="see-input-row">
-          <div className="see-input-wrap">
-            <span className="see-label">Expected SEE:</span>
-            <input
-              id={`${prefix}-see`}
-              type="number" min={0} max={50}
-              className="see-input"
-              value={marks.expectedSEE ?? ''}
-              onChange={(e) => {
-                const raw = e.target.value
-                if (raw === '') { onChange('expectedSEE', ''); return }
-                onChange('expectedSEE', clamp(raw, 0, 50))
-              }}
-              placeholder="—"
-            />
-            <span className="see-max">/50</span>
-          </div>
+      <div className="see-input-row">
+        <div className="see-input-wrap">
+          <span className="see-label">Expected SEE:</span>
+          <input
+            id={`${prefix}-see`}
+            type="number" min={0} max={mode === 'exploratory' ? 20 : 50}
+            className="see-input"
+            value={marks.expectedSEE ?? ''}
+            onChange={(e) => {
+              const raw = e.target.value
+              if (raw === '') { onChange('expectedSEE', ''); return }
+              onChange('expectedSEE', clamp(raw, 0, mode === 'exploratory' ? 20 : 50))
+            }}
+            placeholder="—"
+          />
+          <span className="see-max">/{mode === 'exploratory' ? 20 : 50}</span>
+        </div>
 
-          {grade && (
-            <div className={`predicted-grade grade-${gradeClass(grade)}`}>
-              <span style={{ fontSize: '12px', fontWeight: 500, opacity: 0.7 }}>Predicted:</span>
-              <strong>{grade}</strong>
-              <span style={{ fontSize: '11px', opacity: 0.7 }}>
-                {Math.min(cie + Number(marks.expectedSEE || 0), 100)}/100
-              </span>
-            </div>
-          )}
-          {marks.expectedSEE !== '' && !grade && (
-            <div className="predicted-grade grade-F">
-              <span style={{ fontSize: '12px', fontWeight: 500, opacity: 0.7 }}>Predicted:</span>
-              <strong>F</strong>
-              <span style={{ fontSize: '11px', opacity: 0.7 }}>
-                {Math.min(cie + Number(marks.expectedSEE || 0), 100)}/100
-              </span>
-            </div>
-          )}
-        </div>
-      )}
-      {mode === 'exploratory' && grade && (
-        <div className="see-input-row" style={{ marginTop: '12px' }}>
+        {grade && (
           <div className={`predicted-grade grade-${gradeClass(grade)}`}>
-            <span style={{ fontSize: '12px', fontWeight: 500, opacity: 0.7 }}>Grade:</span>
+            <span style={{ fontSize: '12px', fontWeight: 500, opacity: 0.7 }}>Predicted:</span>
             <strong>{grade}</strong>
-            <span style={{ fontSize: '11px', opacity: 0.7 }}>{cie}/100</span>
+            <span style={{ fontSize: '11px', opacity: 0.7 }}>
+              {Math.min(cie + Number(marks.expectedSEE || 0), 100)}/100
+            </span>
           </div>
-        </div>
-      )}
-      {mode === 'exploratory' && !grade && cie > 0 && (
-        <div className="see-input-row" style={{ marginTop: '12px' }}>
+        )}
+        {marks.expectedSEE !== '' && !grade && (
           <div className="predicted-grade grade-F">
-            <span style={{ fontSize: '12px', fontWeight: 500, opacity: 0.7 }}>Grade:</span>
+            <span style={{ fontSize: '12px', fontWeight: 500, opacity: 0.7 }}>Predicted:</span>
             <strong>F</strong>
-            <span style={{ fontSize: '11px', opacity: 0.7 }}>{cie}/100</span>
+            <span style={{ fontSize: '11px', opacity: 0.7 }}>
+              {Math.min(cie + Number(marks.expectedSEE || 0), 100)}/100
+            </span>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   )
 }
