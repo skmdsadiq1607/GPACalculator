@@ -1,7 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import { useContext } from 'react'
 import { AuthContext } from '../context/AuthContext'
-import { BRANCH_INFO } from '../utils'
 
 const features = [
   { icon: '🏛️', title: 'Curriculum Intelligence', desc: 'Pre-configured with the exact Anurag University AY 2025-26 academic regulations.' },
@@ -60,30 +59,6 @@ export default function Home() {
           ))}
         </div>
       </div>
-
-      {/* Branch Quick Select (Only show if logged in) */}
-      {user && (
-        <div style={{ marginBottom: '80px' }}>
-          <div className="section-header" style={{ textAlign: 'center' }}>
-            <h2 className="section-title" style={{ fontFamily: 'var(--font-main)', fontWeight: 800 }}>Academic Disciplines</h2>
-            <p className="section-subtitle">Select your enrolled department to initialize the calculation suite.</p>
-          </div>
-          <div className="branch-grid">
-            {Object.entries(BRANCH_INFO).map(([key, info]) => (
-              <div
-                key={key}
-                className="branch-card"
-                onClick={() => navigate(`/calculator?branch=${key}`)}
-                id={`branch-${key}`}
-                style={{ padding: '28px 20px' }}
-              >
-                <div className="branch-name" style={{ fontSize: '14px', fontWeight: 600, color: 'var(--text-primary)' }}>{info.name}</div>
-                <div className="branch-code" style={{ fontSize: '11px', letterSpacing: '1px', opacity: 0.7 }}>{info.short}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
 
       {/* Grading Reference */}
       <div style={{ marginBottom: '80px', opacity: user ? 1 : 0.4, transition: 'opacity 0.3s' }}>
