@@ -508,10 +508,10 @@ function GPASummary({ courses, onSave, saving, savedId }) {
 // ============================================================
 // SAVE MODAL
 // ============================================================
-function SaveModal({ show, onClose, onSave, studentName, setStudentName, rollNumber, setRollNumber }) {
-  if (!show) return null
+function SaveModal({ show, onClose, onSave, studentName, setStudentName, rollNumber, setRollNumber, saving }) {
+  if (!show) return null;
   return (
-    <div className="modal-overlay" onClick={onClose}>
+    <div className="modal-overlay page-enter" onClick={onClose}>
       <div className="modal" onClick={e => e.stopPropagation()}>
         <h2 className="modal-title">💾 Save Record</h2>
         <p className="modal-subtitle">Save your predicted GPA to MongoDB for future reference.</p>
