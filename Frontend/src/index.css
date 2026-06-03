@@ -407,6 +407,7 @@ body {
 }
 .cie-input {
   width: 100%;
+  min-width: 0;
   padding: 10px 12px;
   background: var(--bg-input);
   border: 1px solid var(--border);
