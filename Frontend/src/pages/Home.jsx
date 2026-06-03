@@ -90,7 +90,6 @@ export default function Home() {
                 <div className="grade-ref-points" style={{ color: 'var(--text-primary)', fontWeight: '700', fontSize: '14px', marginTop: '8px' }}>
                   {item.pts} pts
                 </div>
-                <div className="grade-ref-label" style={{ fontSize: '12px', color: 'var(--text-secondary)', fontWeight: 500, marginTop: '4px' }}>{item.label}</div>
               </div>
             ))}
           </div>
