@@ -58,13 +58,13 @@ export default function Records() {
     <div className="container page-enter" style={{ paddingTop: '40px', paddingBottom: '60px' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '32px', flexWrap: 'wrap', gap: '16px' }}>
         <div>
-          <h1 className="section-title">Saved Records</h1>
+          <h1 className="section-title" style={{ fontFamily: 'var(--font-display)', fontWeight: 600 }}>Academic Archive</h1>
           <p className="section-subtitle">
-            {records.length} record{records.length !== 1 ? 's' : ''} saved
+            {records.length} stored record{records.length !== 1 ? 's' : ''} retrieved
           </p>
         </div>
         <button className="btn btn-primary" id="new-calculation-btn" onClick={() => navigate('/calculator')}>
-          ➕ New Calculation
+          Initialize New Calculation
         </button>
       </div>
 
@@ -80,13 +80,13 @@ export default function Records() {
         </div>
       ) : records.length === 0 ? (
         <div className="empty-state">
-          <div className="empty-state-icon">📭</div>
-          <div className="empty-state-title">No records yet</div>
-          <p style={{ marginBottom: '24px', fontSize: '14px' }}>
-            Calculate your GPA and save it to see records here
+          <div className="empty-state-icon" style={{ opacity: 0.5 }}>🗄️</div>
+          <div className="empty-state-title" style={{ fontFamily: 'var(--font-display)', fontSize: '24px' }}>Archive Empty</div>
+          <p style={{ marginBottom: '24px', fontSize: '14px', maxWidth: '400px', margin: '0 auto 24px' }}>
+            There are no academic records associated with your account. Initialize a calculation to securely store your data here.
           </p>
           <button className="btn btn-primary" onClick={() => navigate('/calculator')}>
-            🚀 Start Calculating
+            Launch Calculation Suite
           </button>
         </div>
       ) : (

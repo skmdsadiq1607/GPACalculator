@@ -659,8 +659,9 @@ export default function Calculator() {
 
   if (loading) return (
     <div className="container" style={{ paddingTop: '80px', textAlign: 'center' }}>
-      <div style={{ fontSize: '48px', marginBottom: '16px', animation: 'pulse 1.5s infinite' }}>⚡</div>
-      <div style={{ color: 'var(--text-secondary)' }}>Loading curriculum...</div>
+      <div style={{ width: '40px', height: '40px', border: '3px solid rgba(255,255,255,0.1)', borderTopColor: 'var(--text-primary)', borderRadius: '50%', animation: 'spin 1s linear infinite', margin: '0 auto 20px' }}></div>
+      <div style={{ color: 'var(--text-secondary)', fontFamily: 'var(--font-main)', fontWeight: 500 }}>Initializing Curriculum Matrix...</div>
+      <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
     </div>
   )
 
@@ -711,8 +712,8 @@ export default function Calculator() {
             </div>
           ))}
 
-          <div style={{ padding: '14px 18px', borderRadius: '10px', background: 'rgba(250,200,0,0.03)', border: '1px solid rgba(250,200,0,0.1)', fontSize: '12px', color: 'var(--text-secondary)', marginTop: '8px' }}>
-            <strong style={{ color: 'var(--accent)' }}>📌 Note:</strong> 2nd, 3rd & 4th year structures will be released by Anurag University in due course. Year 1 data is loaded from the official AU B.Tech Curriculum PDF (AY 2025-26).
+          <div style={{ padding: '16px 20px', borderRadius: '8px', background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)', fontSize: '13px', color: 'var(--text-secondary)', marginTop: '16px', lineHeight: '1.6' }}>
+            <strong style={{ color: 'var(--text-primary)' }}>Institution Notice:</strong> Year II, III, and IV curriculum structures will be integrated upon official release by Anurag University. Current Year I matrices are strictly calibrated against the official AY 2025-26 B.Tech Curriculum Directive.
           </div>
         </div>
 

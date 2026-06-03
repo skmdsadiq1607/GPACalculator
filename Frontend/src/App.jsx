@@ -3,6 +3,7 @@ import { useContext, useState, useRef, useEffect } from 'react'
 import { GoogleLogin, googleLogout } from '@react-oauth/google'
 import { jwtDecode } from 'jwt-decode'
 import { AuthContext } from './context/AuthContext'
+import ProtectedRoute from './components/ProtectedRoute'
 import Home from './pages/Home'
 import Calculator from './pages/Calculator'
 import Records from './pages/Records'
@@ -46,71 +47,68 @@ export default function App() {
 
   return (
     <div>
-      <nav className="navbar">
+      <nav className="navbar" style={{ background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(32px)', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
         <div className="navbar-inner">
           <NavLink to="/" className="navbar-logo" style={{ textDecoration: 'none' }}>
-            <div className="logo-icon">⚡</div>
-            <div className="logo-text">
-              <span className="logo-brand">IgniteXT</span>
-              <span className="logo-sub">GPA Calculator • AU 2025-26</span>
+            <div className="logo-text" style={{ flexDirection: 'row', alignItems: 'baseline', gap: '8px' }}>
+              <span className="logo-brand" style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: '24px', letterSpacing: '-0.5px' }}>IgniteXT</span>
+              <span className="logo-sub" style={{ fontSize: '10px', color: 'var(--text-secondary)', letterSpacing: '2px' }}>INSTITUTE</span>
             </div>
           </NavLink>
-          <div className="navbar-nav" style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
-            <NavLink to="/" end className={({ isActive }) => `nav-link${isActive ? ' active' : ''}`}>Home</NavLink>
-            <NavLink to="/calculator" className={({ isActive }) => `nav-link${isActive ? ' active' : ''}`}>Calculator</NavLink>
-            <NavLink to="/records" className={({ isActive }) => `nav-link${isActive ? ' active' : ''}`}>Records</NavLink>
+          <div className="navbar-nav" style={{ display: 'flex', alignItems: 'center', gap: '24px' }}>
+            {user && (
+              <>
+                <NavLink to="/calculator" className={({ isActive }) => `nav-link${isActive ? ' active' : ''}`}>Calculator</NavLink>
+                <NavLink to="/records" className={({ isActive }) => `nav-link${isActive ? ' active' : ''}`}>Records</NavLink>
+              </>
+            )}
             
             {user ? (
-              <div style={{ position: 'relative' }} ref={menuRef}>
+              <div style={{ position: 'relative', marginLeft: '8px' }} ref={menuRef}>
                 <button 
                   onClick={() => setMenuOpen(!menuOpen)}
                   style={{ 
-                    display: 'flex', alignItems: 'center', gap: '8px', 
-                    background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)',
-                    padding: '4px 12px 4px 4px', borderRadius: '24px', cursor: 'pointer', color: 'white'
+                    display: 'flex', alignItems: 'center', gap: '10px', 
+                    background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)',
+                    padding: '4px 14px 4px 4px', borderRadius: '32px', cursor: 'pointer', color: 'white',
+                    transition: 'all 0.2s ease'
                   }}
                 >
-                  <img src={user.picture} alt={user.name} style={{ width: '28px', height: '28px', borderRadius: '50%', objectFit: 'cover' }} />
-                  <span style={{ fontSize: '14px', fontWeight: 500 }}>{user.name.split(' ')[0]}</span>
+                  <img src={user.picture} alt={user.name} style={{ width: '30px', height: '30px', borderRadius: '50%', objectFit: 'cover' }} />
+                  <span style={{ fontSize: '13px', fontWeight: 600, letterSpacing: '0.2px' }}>{user.name.split(' ')[0]}</span>
                 </button>
                 
                 {menuOpen && (
                   <div style={{
-                    position: 'absolute', top: 'calc(100% + 8px)', right: 0, width: '220px',
-                    background: 'var(--bg-surface)', border: '1px solid rgba(255,255,255,0.1)',
-                    borderRadius: '12px', boxShadow: '0 10px 30px rgba(0,0,0,0.5)', overflow: 'hidden', zIndex: 1000
+                    position: 'absolute', top: 'calc(100% + 12px)', right: 0, width: '240px',
+                    background: 'var(--bg-secondary)', border: '1px solid rgba(255,255,255,0.08)',
+                    borderRadius: '16px', boxShadow: '0 20px 40px rgba(0,0,0,0.8)', overflow: 'hidden', zIndex: 1000
                   }}>
-                    <div style={{ padding: '16px', background: 'rgba(255,255,255,0.02)' }}>
-                      <p style={{ margin: '0 0 4px 0', fontWeight: 600, fontSize: '14px' }}>{user.name}</p>
+                    <div style={{ padding: '20px', background: 'rgba(255,255,255,0.02)' }}>
+                      <p style={{ margin: '0 0 4px 0', fontWeight: 600, fontSize: '14px', letterSpacing: '0.2px' }}>{user.name}</p>
                       <p style={{ margin: 0, fontSize: '12px', color: 'var(--text-muted)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{user.email}</p>
                     </div>
-                    <div style={{ height: '1px', background: 'rgba(255,255,255,0.1)' }}></div>
+                    <div style={{ height: '1px', background: 'rgba(255,255,255,0.08)' }}></div>
                     <button 
                       onClick={() => { setMenuOpen(false); navigate('/records'); }}
-                      style={{ width: '100%', textAlign: 'left', padding: '12px 16px', background: 'none', border: 'none', color: 'white', cursor: 'pointer', fontSize: '14px', display: 'flex', gap: '8px' }}
+                      style={{ width: '100%', textAlign: 'left', padding: '14px 20px', background: 'none', border: 'none', color: 'var(--text-primary)', cursor: 'pointer', fontSize: '13px', fontWeight: 500, display: 'flex', gap: '10px', transition: 'background 0.2s' }}
+                      onMouseOver={(e) => e.target.style.background = 'rgba(255,255,255,0.04)'}
+                      onMouseOut={(e) => e.target.style.background = 'none'}
                     >
-                      📂 My Records
+                      My Records
                     </button>
                     <button 
                       onClick={handleLogout}
-                      style={{ width: '100%', textAlign: 'left', padding: '12px 16px', background: 'none', border: 'none', color: '#ff5b5b', cursor: 'pointer', fontSize: '14px', display: 'flex', gap: '8px' }}
+                      style={{ width: '100%', textAlign: 'left', padding: '14px 20px', background: 'none', border: 'none', color: '#f87171', cursor: 'pointer', fontSize: '13px', fontWeight: 500, display: 'flex', gap: '10px', transition: 'background 0.2s' }}
+                      onMouseOver={(e) => e.target.style.background = 'rgba(248,113,113,0.1)'}
+                      onMouseOut={(e) => e.target.style.background = 'none'}
                     >
-                      🚪 Sign Out
+                      Sign Out
                     </button>
                   </div>
                 )}
               </div>
-            ) : (
-              <div style={{ transform: 'scale(0.85)', transformOrigin: 'right' }}>
-                <GoogleLogin
-                  onSuccess={handleSuccess}
-                  onError={() => console.error('Login Failed')}
-                  theme="filled_black"
-                  shape="pill"
-                  text="signin_with"
-                />
-              </div>
-            )}
+            ) : null}
           </div>
         </div>
       </nav>
@@ -118,9 +116,9 @@ export default function App() {
       <main>
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/calculator" element={<Calculator />} />
-          <Route path="/calculator/:id" element={<Calculator />} />
-          <Route path="/records" element={<Records />} />
+          <Route path="/calculator" element={<ProtectedRoute><Calculator /></ProtectedRoute>} />
+          <Route path="/calculator/:id" element={<ProtectedRoute><Calculator /></ProtectedRoute>} />
+          <Route path="/records" element={<ProtectedRoute><Records /></ProtectedRoute>} />
         </Routes>
       </main>
     </div>
