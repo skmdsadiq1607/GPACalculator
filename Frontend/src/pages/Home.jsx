@@ -53,12 +53,12 @@ export default function Home() {
           <h2 style={{ fontSize: '32px', fontWeight: '800', marginBottom: '12px' }}>Everything You Need</h2>
           <p style={{ color: 'var(--text-secondary)' }}>A powerful toolset designed to take the stress out of academics.</p>
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '24px', maxWidth: '1000px', margin: '0 auto' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '32px', maxWidth: '1000px', margin: '0 auto' }}>
           {features.map((f, i) => (
-            <div key={i} className="card" style={{ animation: `fadeInUp 0.5s ease ${i * 0.1}s both`, border: '1px solid rgba(255,255,255,0.04)', background: 'linear-gradient(180deg, rgba(30,30,30,0.5) 0%, rgba(10,10,10,0.8) 100%)', padding: '32px 24px', borderRadius: '16px', transition: 'transform 0.3s ease, box-shadow 0.3s ease' }}>
-              <div style={{ fontSize: '36px', marginBottom: '20px', background: 'rgba(255,255,255,0.05)', width: '64px', height: '64px', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '16px' }}>{f.icon}</div>
+            <div key={i} className="card" style={{ animation: `fadeInUp 0.5s ease ${i * 0.1}s both`, background: 'transparent', padding: '16px', border: 'none', boxShadow: 'none' }}>
+              <div style={{ fontSize: '36px', marginBottom: '20px', background: 'rgba(255,255,255,0.03)', width: '64px', height: '64px', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '16px' }}>{f.icon}</div>
               <div style={{ fontWeight: '700', marginBottom: '12px', fontSize: '18px', color: 'var(--text-primary)' }}>{f.title}</div>
-              <div style={{ fontSize: '14px', color: 'var(--text-secondary)', lineHeight: '1.6' }}>{f.desc}</div>
+              <div style={{ fontSize: '15px', color: 'var(--text-secondary)', lineHeight: '1.6' }}>{f.desc}</div>
             </div>
           ))}
         </div>
