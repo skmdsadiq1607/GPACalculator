@@ -16,16 +16,16 @@ export default function Home() {
   return (
     <div className="container page-enter">
       {/* Hero */}
-      <div className="hero" style={{ padding: '100px 24px 80px', textAlign: 'center', position: 'relative' }}>
-        <div style={{ position: 'absolute', top: '-100px', left: '50%', transform: 'translateX(-50%)', width: '600px', height: '600px', background: 'radial-gradient(circle, rgba(253, 230, 138, 0.1) 0%, rgba(0,0,0,0) 70%)', pointerEvents: 'none', zIndex: -1 }}></div>
-        <div className="hero-badge" style={{ display: 'inline-block', marginBottom: '24px', padding: '6px 16px', borderRadius: '30px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', fontSize: '13px', fontWeight: '600', letterSpacing: '0.5px', color: 'var(--accent)' }}>
+      <div className="hero" style={{ padding: '80px 24px', minHeight: 'calc(100vh - 80px)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', position: 'relative' }}>
+        <div style={{ position: 'absolute', top: '0', left: '50%', transform: 'translateX(-50%)', width: '800px', height: '800px', background: 'radial-gradient(circle, rgba(253, 230, 138, 0.08) 0%, rgba(0,0,0,0) 70%)', pointerEvents: 'none', zIndex: -1 }}></div>
+        <div className="hero-badge" style={{ display: 'inline-block', marginBottom: '32px', padding: '6px 16px', borderRadius: '30px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', fontSize: '13px', fontWeight: '600', letterSpacing: '0.5px', color: 'var(--accent)' }}>
           Built for Anuragians by IgniteXT
         </div>
-        <h1 className="hero-title" style={{ fontSize: 'clamp(40px, 6vw, 64px)', lineHeight: '1.1', fontWeight: '800', letterSpacing: '-1.5px', marginBottom: '24px' }}>
+        <h1 className="hero-title" style={{ fontSize: 'clamp(44px, 7vw, 72px)', lineHeight: '1.1', fontWeight: '800', letterSpacing: '-1.5px', marginBottom: '28px' }}>
           Curious About Your Grades?<br/>
           <span className="gradient-text">Calculate Them Now.</span>
         </h1>
-        <p className="hero-subtitle" style={{ maxWidth: '650px', margin: '0 auto 40px', fontSize: '18px', color: 'var(--text-secondary)', lineHeight: '1.6' }}>
+        <p className="hero-subtitle" style={{ maxWidth: '650px', margin: '0 auto 48px', fontSize: '19px', color: 'var(--text-secondary)', lineHeight: '1.6' }}>
           Stop guessing and start planning. Track your CIE marks, predict your SEE requirements, and automatically calculate your SGPA based on the official Anurag University curriculum.
         </p>
         
@@ -44,6 +44,10 @@ export default function Home() {
               <span style={{ color: 'var(--text-primary)', fontWeight: '600' }}>Ready to start?</span> Sign in with Google using the button in the top right.
             </div>
           )}
+        </div>
+        
+        <div style={{ position: 'absolute', bottom: '40px', left: '50%', transform: 'translateX(-50%)', opacity: 0.5, animation: 'bounce 2s infinite' }}>
+          <span style={{ fontSize: '24px' }}>↓</span>
         </div>
       </div>
 
