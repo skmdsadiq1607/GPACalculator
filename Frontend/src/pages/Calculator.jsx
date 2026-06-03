@@ -597,6 +597,29 @@ export default function Calculator() {
 
   const showToast = (msg, type = 'success') => setToast({ message: msg, type })
 
+  useEffect(() => {
+    if (recordId) {
+      setLoading(true)
+      getRecord(recordId).then(res => {
+        const data = res.data
+        if (data) {
+          setStudentName(data.studentName || 'Student')
+          setRollNumber(data.rollNumber || '')
+          setSelectedBranch(data.branch)
+          if (data.semesters && data.semesters.length > 0) {
+            setSelectedSem(data.semesters[0].semesterName)
+            setCourses(data.semesters[0].courses)
+          }
+        }
+      }).catch(err => {
+        console.error('Failed to load record', err)
+        showToast('Failed to load record', 'error')
+      }).finally(() => {
+        setLoading(false)
+      })
+    }
+  }, [recordId])
+
   const handleSelect = useCallback((branch, sem) => {
     if (!curriculum) return
     const rawCourses = curriculum[branch]?.semesters[sem] || []

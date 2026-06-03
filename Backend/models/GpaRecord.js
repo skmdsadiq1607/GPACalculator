@@ -6,7 +6,7 @@ const courseResultSchema = new mongoose.Schema({
   credits: { type: Number, required: true },
   grade: { type: String, default: '' },
   gradePoints: { type: Number, default: 0 },
-});
+}, { strict: false });
 
 const semesterResultSchema = new mongoose.Schema({
   semesterName: { type: String, required: true },
