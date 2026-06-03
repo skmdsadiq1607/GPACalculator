@@ -13,7 +13,9 @@ app.use(express.json());
 
 // Routes
 const gpaRoutes = require('./routes/gpa');
+const authRoutes = require('./routes/auth');
 app.use('/api', gpaRoutes);
+app.use('/api/auth', authRoutes);
 
 // Health check
 app.get('/health', (req, res) => {

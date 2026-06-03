@@ -7,6 +7,7 @@ import ProtectedRoute from './components/ProtectedRoute'
 import Home from './pages/Home'
 import Calculator from './pages/Calculator'
 import Records from './pages/Records'
+import { logUserSignIn } from './api'
 
 export default function App() {
   const navigate = useNavigate()
@@ -17,13 +18,20 @@ export default function App() {
   const handleSuccess = async (credentialResponse) => {
     try {
       const decoded = jwtDecode(credentialResponse.credential)
-      login({
+      
+      const userData = {
         userId: decoded.sub,
         email: decoded.email,
         name: decoded.name,
         picture: decoded.picture,
         token: credentialResponse.credential
-      })
+      }
+      
+      login(userData)
+
+      // Fire and forget to log the user in backend
+      logUserSignIn(userData).catch(err => console.error('Failed to log sign in:', err))
+
     } catch (err) {
       console.error('Login failed', err)
     }
