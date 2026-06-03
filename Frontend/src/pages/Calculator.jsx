@@ -715,11 +715,12 @@ export default function Calculator() {
       const element = document.getElementById('pdf-content')
       element.classList.add('pdf-export-mode')
       
+      const isMobile = window.innerWidth <= 768;
       const opt = {
         margin:       0.5,
         filename:     `${studentName.replace(/\s+/g, '_')}_GPA_Report.pdf`,
         image:        { type: 'jpeg', quality: 0.98 },
-        html2canvas:  { scale: 2, useCORS: true, backgroundColor: '#060606' },
+        html2canvas:  { scale: isMobile ? 1 : 2, useCORS: true, backgroundColor: '#ffffff' },
         jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
       }
 
