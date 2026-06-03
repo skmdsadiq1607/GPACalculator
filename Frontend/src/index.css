@@ -820,3 +820,44 @@ body {
   /* Smallest screens */
   .cie-field { width: 100%; }
 }
+
+/* ===== PDF EXPORT STYLES ===== */
+.pdf-export-mode {
+  background: var(--bg-primary) !important;
+  color: var(--text-primary) !important;
+  padding: 40px !important;
+}
+
+.pdf-export-mode .hide-on-print {
+  display: none !important;
+}
+
+.pdf-header-brand {
+  display: none;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 32px;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 16px;
+}
+
+.pdf-export-mode .pdf-header-brand {
+  display: flex !important;
+}
+
+.pdf-export-mode .calculator-layout {
+  grid-template-columns: 1fr;
+  gap: 32px;
+}
+
+.pdf-export-mode .gpa-summary-panel {
+  position: static;
+  box-shadow: none;
+  border: 1px solid var(--border);
+}
+
+.pdf-export-mode .course-card {
+  box-shadow: none;
+  border: 1px solid var(--border);
+  break-inside: avoid;
+}

@@ -3,6 +3,7 @@ import { useSearchParams, useParams, useNavigate } from 'react-router-dom'
 import { saveRecord, getRecord, updateRecord } from '../api'
 import { calculateSGPA, calculateCGPA, getClassification, cgpaToPercentage, BRANCH_INFO, GRADE_POINTS } from '../utils'
 import { curriculum as localCurriculum } from '../data/curriculum'
+import html2pdf from 'html2pdf.js'
 
 // ============================================================
 // CONSTANTS & HELPERS
@@ -475,7 +476,7 @@ function GPASummary({ courses, onSave, saving, savedId }) {
       <div className="divider" style={{ margin: '12px 0' }} />
 
       <div style={{ padding: '0 20px 20px' }}>
-        <button className="btn btn-primary" style={{ width: '100%', justifyContent: 'center' }} onClick={onSave} disabled={saving}>
+        <button className="btn btn-primary hide-on-print" style={{ width: '100%', justifyContent: 'center' }} onClick={onSave} disabled={saving}>
           {saving ? '⏳ Saving...' : savedId ? '💾 Update Record' : '💾 Save Record'}
         </button>
       </div>
@@ -495,7 +496,7 @@ function SaveModal({ show, onClose, onSave, studentName, setStudentName, rollNum
         <p className="modal-subtitle">Save your predicted GPA to MongoDB for future reference.</p>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
           <div className="input-group">
-            <label className="input-label">Student Name</label>
+            <label className="input-label">Student Name (For PDF)</label>
             <input id="save-name" className="input" placeholder="e.g., Sadiq Mohammed" value={studentName} onChange={e => setStudentName(e.target.value)} />
           </div>
           <div className="input-group">
@@ -504,8 +505,10 @@ function SaveModal({ show, onClose, onSave, studentName, setStudentName, rollNum
           </div>
         </div>
         <div className="modal-actions">
-          <button className="btn btn-secondary flex-1" style={{ justifyContent: 'center' }} onClick={onClose}>Cancel</button>
-          <button className="btn btn-primary flex-1" style={{ justifyContent: 'center' }} onClick={onSave}>Save</button>
+          <button className="btn btn-ghost flex-1" onClick={onClose} disabled={saving}>Cancel</button>
+          <button className="btn btn-primary flex-1" onClick={onSave} disabled={saving || !studentName.trim()}>
+            {saving ? '⏳ Saving...' : '💾 Save & Get PDF'}
+          </button>
         </div>
       </div>
     </div>
@@ -676,8 +679,32 @@ export default function Calculator() {
         navigate(`/calculator/${res.data._id}`, { replace: true })
       }
       setShowModal(false)
+      await generatePDF()
     } catch { showToast('Could not save — is the server running?', 'error') }
     finally { setSaving(false) }
+  }
+
+  const generatePDF = async () => {
+    try {
+      const element = document.getElementById('pdf-content')
+      element.classList.add('pdf-export-mode')
+      
+      const opt = {
+        margin:       0.5,
+        filename:     `${studentName.replace(/\s+/g, '_')}_GPA_Report.pdf`,
+        image:        { type: 'jpeg', quality: 0.98 },
+        html2canvas:  { scale: 2, useCORS: true, backgroundColor: '#060606' },
+        jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
+      }
+
+      await html2pdf().set(opt).from(element).save()
+      element.classList.remove('pdf-export-mode')
+      showToast('PDF Downloaded Successfully!', 'success')
+    } catch (err) {
+      console.error(err)
+      showToast('Error generating PDF.', 'error')
+      document.getElementById('pdf-content')?.classList.remove('pdf-export-mode')
+    }
   }
 
   if (loading) return (
@@ -688,7 +715,6 @@ export default function Calculator() {
     </div>
   )
 
-  // Not yet selected branch/sem
   if (!selectedBranch || !selectedSem) {
     return (
       <div className="container" style={{ paddingTop: '40px', paddingBottom: '60px' }}>
@@ -701,22 +727,34 @@ export default function Calculator() {
 
   return (
     <div className="container page-enter" style={{ paddingTop: '32px', paddingBottom: '80px' }}>
-      {/* Page header */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '28px', flexWrap: 'wrap' }}>
-        <button className="btn btn-ghost" style={{ fontSize: '13px' }} onClick={() => { setSelectedBranch(null); setSelectedSem(null) }}>
-          ← Back
-        </button>
-        <div>
-          <h1 style={{ fontSize: '20px', fontWeight: '800', letterSpacing: '-0.3px' }}>
-            {branchInfo?.emoji} {branchInfo?.name} — {selectedSem}
-          </h1>
-          <div style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>
-            Anurag University • AY 2025-26 • {courses.length} subjects • Enter CIE marks + Expected SEE to predict grades
+      <div id="pdf-content">
+        <div className="pdf-header-brand">
+          <div>
+            <div style={{ fontSize: '24px', fontWeight: '800', letterSpacing: '-0.5px' }}>
+              Ignite<span style={{ color: 'var(--accent)' }}>XT</span>
+            </div>
+            <div style={{ fontSize: '10px', color: 'var(--text-secondary)', letterSpacing: '1px', textTransform: 'uppercase' }}>Student Community</div>
+          </div>
+          <div style={{ textAlign: 'right' }}>
+            <div style={{ fontSize: '14px', fontWeight: '700', color: 'var(--text-primary)' }}>Academic Report</div>
+            <div style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>Generated automatically</div>
           </div>
         </div>
-      </div>
 
-      {/* Mark entry guide */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '24px' }}>
+          <div>
+            <button className="btn btn-ghost hide-on-print" style={{ fontSize: '13px', paddingLeft: 0 }} onClick={() => { setSelectedBranch(null); setSelectedSem(null) }}>
+              ← Back
+            </button>
+            <h1 style={{ fontSize: '20px', fontWeight: '800', letterSpacing: '-0.3px', marginTop: '10px' }}>
+              {branchInfo?.emoji} {branchInfo?.name} — {selectedSem}
+            </h1>
+            <div style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>
+              Anurag University • AY 2025-26 • {courses.length} subjects • Enter CIE marks + Expected SEE to predict grades
+            </div>
+          </div>
+        </div>
+
       <div style={{ padding: '12px 16px', borderRadius: '10px', background: 'rgba(250,200,0,0.04)', border: '1px solid var(--accent-border)', fontSize: '12px', color: 'var(--text-secondary)', marginBottom: '24px', display: 'flex', gap: '24px', flexWrap: 'wrap' }}>
         <span>📝 <strong style={{ color: 'var(--accent)' }}>CIE</strong> = Mid-1 (/20) + Mid-2 (/20) + Assignment (/10) = max 50</span>
         <span>📄 <strong style={{ color: 'var(--accent)' }}>SEE</strong> = End exam out of 50</span>
@@ -749,6 +787,7 @@ export default function Calculator() {
             savedId={savedId}
           />
         </div>
+      </div>
       </div>
 
       <SaveModal
