@@ -50,12 +50,12 @@ export default function App() {
       <nav className="navbar" style={{ background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(32px)', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
         <div className="navbar-inner">
           <NavLink to="/" className="navbar-logo" style={{ textDecoration: 'none' }}>
-            <div className="logo-text" style={{ flexDirection: 'column', alignItems: 'flex-start' }}>
+            <div className="logo-text" style={{ flexDirection: 'column', alignItems: 'center' }}>
               <span className="logo-brand" style={{ fontFamily: 'var(--font-main)', fontWeight: 800, fontSize: '20px', letterSpacing: '-0.5px', lineHeight: '1.2' }}>
                 <span style={{ color: '#ffffff' }}>Ignite</span>
                 <span style={{ color: 'var(--accent)' }}>XT</span>
               </span>
-              <span className="logo-sub" style={{ fontSize: '10px', color: 'var(--text-secondary)', letterSpacing: '1px' }}>GPA Calculator</span>
+              <span className="logo-sub" style={{ fontSize: '10px', color: 'var(--text-secondary)', letterSpacing: '1px', textTransform: 'uppercase', fontWeight: 600 }}>GPA Calculator</span>
             </div>
           </NavLink>
           <div className="navbar-nav" style={{ display: 'flex', alignItems: 'center', gap: '24px' }}>
