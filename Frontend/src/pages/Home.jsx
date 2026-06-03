@@ -22,8 +22,8 @@ export default function Home() {
           Built for Anuragians by IgniteXT
         </div>
         <h1 className="hero-title">
-          Master Your Grades <br/>
-          <span className="gradient-text">With Precision</span>
+          What's Your Next SGPA? <br/>
+          <span className="gradient-text">Let's Find Out.</span>
         </h1>
         <p className="hero-subtitle">
           The most advanced academic tracking suite for Anurag University. Automatically calculate your SGPA, set target grades, and generate professional PDF reports.
