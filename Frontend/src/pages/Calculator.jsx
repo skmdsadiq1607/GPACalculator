@@ -1,7 +1,8 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useSearchParams, useParams, useNavigate } from 'react-router-dom'
-import { getCurriculum, saveRecord, getRecord, updateRecord } from '../api'
+import { saveRecord, getRecord, updateRecord } from '../api'
 import { calculateSGPA, calculateCGPA, getClassification, cgpaToPercentage, BRANCH_INFO, GRADE_POINTS } from '../utils'
+import { curriculum as localCurriculum } from '../data/curriculum'
 
 // ============================================================
 // CONSTANTS & HELPERS
@@ -611,23 +612,17 @@ export default function Calculator() {
   const { id: recordId } = useParams()
   const navigate = useNavigate()
 
-  const [curriculum, setCurriculum] = useState(null)
+  const [curriculum, setCurriculum] = useState(localCurriculum)
   const [selectedBranch, setSelectedBranch] = useState(null)
   const [selectedSem, setSelectedSem] = useState(null)
   const [courses, setCourses] = useState([])
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(false)
   const [saving, setSaving] = useState(false)
   const [savedId, setSavedId] = useState(recordId || null)
   const [showModal, setShowModal] = useState(false)
   const [studentName, setStudentName] = useState('Student')
   const [rollNumber, setRollNumber] = useState('')
   const [toast, setToast] = useState(null)
-
-  useEffect(() => {
-    getCurriculum()
-      .then(res => { setCurriculum(res.data.curriculum); setLoading(false) })
-      .catch(() => { setLoading(false); showToast('Server offline — grades won\'t save', 'error') })
-  }, [])
 
   const showToast = (msg, type = 'success') => setToast({ message: msg, type })
 
