@@ -123,15 +123,15 @@ function PrintableScorecard({ courses, sgpa }) {
         </div>
       </div>
 
-      <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '12px' }}>
+      <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px', border: '2px solid #333' }}>
         <thead>
-          <tr style={{ background: '#f5f5f5', borderBottom: '2px solid #ddd' }}>
-            <th style={{ padding: '12px', textAlign: 'left', border: '1px solid #eee', width: '40%' }}>Course Name & Code</th>
-            <th style={{ padding: '12px', textAlign: 'center', border: '1px solid #eee' }}>Type</th>
-            <th style={{ padding: '12px', textAlign: 'center', border: '1px solid #eee' }}>Credits</th>
-            <th style={{ padding: '12px', textAlign: 'center', border: '1px solid #eee' }}>CIE Total</th>
-            <th style={{ padding: '12px', textAlign: 'center', border: '1px solid #eee' }}>SEE Target</th>
-            <th style={{ padding: '12px', textAlign: 'center', border: '1px solid #eee' }}>Predicted Grade</th>
+          <tr style={{ background: '#222', color: '#fff' }}>
+            <th style={{ padding: '12px', textAlign: 'left', border: '1px solid #444', width: '40%' }}>Course Name & Code</th>
+            <th style={{ padding: '12px', textAlign: 'center', border: '1px solid #444' }}>Type</th>
+            <th style={{ padding: '12px', textAlign: 'center', border: '1px solid #444' }}>Credits</th>
+            <th style={{ padding: '12px', textAlign: 'center', border: '1px solid #444' }}>CIE Total</th>
+            <th style={{ padding: '12px', textAlign: 'center', border: '1px solid #444' }}>SEE Target</th>
+            <th style={{ padding: '12px', textAlign: 'center', border: '1px solid #444' }}>Predicted Grade</th>
           </tr>
         </thead>
         <tbody>
@@ -141,26 +141,26 @@ function PrintableScorecard({ courses, sgpa }) {
               const pc = c.practicalCredits ?? (c.credits - tc)
               return (
                 <React.Fragment key={i}>
-                  <tr style={{ borderBottom: '1px solid #eee', background: '#fff' }}>
-                    <td style={{ padding: '12px', border: '1px solid #eee' }}>
+                  <tr style={{ background: '#fff' }}>
+                    <td style={{ padding: '12px', border: '1px solid #ccc', borderBottom: '1px dashed #ccc' }}>
                       <strong style={{ fontSize: '13px', color: '#111' }}>{c.title} (Theory)</strong><br/>
-                      <span style={{ color: '#888' }}>{c.code}</span>
+                      <span style={{ color: '#666', fontSize: '11px' }}>{c.code}</span>
                     </td>
-                    <td style={{ padding: '12px', textAlign: 'center', border: '1px solid #eee', color: '#555' }}>Theory</td>
-                    <td style={{ padding: '12px', textAlign: 'center', border: '1px solid #eee', fontWeight: 'bold' }}>{tc}</td>
-                    <td style={{ padding: '12px', textAlign: 'center', border: '1px solid #eee', whiteSpace: 'nowrap' }}>{cieTot(c.theory, 'theory')}/50</td>
-                    <td style={{ padding: '12px', textAlign: 'center', border: '1px solid #eee', whiteSpace: 'nowrap' }}>{c.theory?.expectedSEE || '-'}/50</td>
-                    <td style={{ padding: '12px', textAlign: 'center', border: '1px solid #eee', fontWeight: 'bold', color: c.theoryGrade === 'F' ? '#e11d48' : '#16a34a' }}>{c.theoryGrade || '-'}</td>
+                    <td style={{ padding: '12px', textAlign: 'center', border: '1px solid #ccc', borderBottom: '1px dashed #ccc', color: '#555' }}>Theory</td>
+                    <td style={{ padding: '12px', textAlign: 'center', border: '1px solid #ccc', borderBottom: '1px dashed #ccc', fontWeight: 'bold' }}>{tc}</td>
+                    <td style={{ padding: '12px', textAlign: 'center', border: '1px solid #ccc', borderBottom: '1px dashed #ccc', whiteSpace: 'nowrap' }}>{cieTot(c.theory, 'theory')}/50</td>
+                    <td style={{ padding: '12px', textAlign: 'center', border: '1px solid #ccc', borderBottom: '1px dashed #ccc', whiteSpace: 'nowrap' }}>{c.theory?.expectedSEE || '-'}/50</td>
+                    <td style={{ padding: '12px', textAlign: 'center', border: '1px solid #ccc', borderBottom: '1px dashed #ccc', fontWeight: 'bold', color: c.theoryGrade === 'F' ? '#e11d48' : '#16a34a' }}>{c.theoryGrade || '-'}</td>
                   </tr>
-                  <tr style={{ borderBottom: '1px solid #eee', background: '#fafafa' }}>
-                    <td style={{ padding: '12px', border: '1px solid #eee', paddingLeft: '24px' }}>
-                      <strong style={{ fontSize: '13px', color: '#333' }}>{c.title} (Practical)</strong>
+                  <tr style={{ borderBottom: '2px solid #ccc', background: '#fafafa' }}>
+                    <td style={{ padding: '12px', border: '1px solid #ccc', borderTop: 'none', paddingLeft: '24px' }}>
+                      <strong style={{ fontSize: '13px', color: '#444' }}>{c.title} (Practical)</strong>
                     </td>
-                    <td style={{ padding: '12px', textAlign: 'center', border: '1px solid #eee', color: '#555' }}>Practical</td>
-                    <td style={{ padding: '12px', textAlign: 'center', border: '1px solid #eee', fontWeight: 'bold' }}>{pc}</td>
-                    <td style={{ padding: '12px', textAlign: 'center', border: '1px solid #eee', whiteSpace: 'nowrap' }}>{cieTot(c.practical, 'practical')}/50</td>
-                    <td style={{ padding: '12px', textAlign: 'center', border: '1px solid #eee', whiteSpace: 'nowrap' }}>{c.practical?.expectedSEE || '-'}/50</td>
-                    <td style={{ padding: '12px', textAlign: 'center', border: '1px solid #eee', fontWeight: 'bold', color: c.practicalGrade === 'F' ? '#e11d48' : '#16a34a' }}>{c.practicalGrade || '-'}</td>
+                    <td style={{ padding: '12px', textAlign: 'center', border: '1px solid #ccc', borderTop: 'none', color: '#555' }}>Practical</td>
+                    <td style={{ padding: '12px', textAlign: 'center', border: '1px solid #ccc', borderTop: 'none', fontWeight: 'bold' }}>{pc}</td>
+                    <td style={{ padding: '12px', textAlign: 'center', border: '1px solid #ccc', borderTop: 'none', whiteSpace: 'nowrap' }}>{cieTot(c.practical, 'practical')}/50</td>
+                    <td style={{ padding: '12px', textAlign: 'center', border: '1px solid #ccc', borderTop: 'none', whiteSpace: 'nowrap' }}>{c.practical?.expectedSEE || '-'}/50</td>
+                    <td style={{ padding: '12px', textAlign: 'center', border: '1px solid #ccc', borderTop: 'none', fontWeight: 'bold', color: c.practicalGrade === 'F' ? '#e11d48' : '#16a34a' }}>{c.practicalGrade || '-'}</td>
                   </tr>
                 </React.Fragment>
               )
@@ -169,16 +169,16 @@ function PrintableScorecard({ courses, sgpa }) {
             const isPrac = c.category?.includes('Practical')
             const mode = isPrac ? 'practical' : 'theory'
             return (
-              <tr key={i} style={{ borderBottom: '1px solid #eee' }}>
-                <td style={{ padding: '12px', border: '1px solid #eee' }}>
+              <tr key={i} style={{ borderBottom: '2px solid #ccc', background: i % 2 === 0 ? '#fff' : '#fafafa' }}>
+                <td style={{ padding: '12px', border: '1px solid #ccc' }}>
                   <strong style={{ fontSize: '13px', color: '#111' }}>{c.title}</strong><br/>
-                  <span style={{ color: '#888' }}>{c.code}</span>
+                  <span style={{ color: '#666', fontSize: '11px' }}>{c.code}</span>
                 </td>
-                <td style={{ padding: '12px', textAlign: 'center', border: '1px solid #eee', color: '#555' }}>{isPrac ? 'Practical' : 'Theory'}</td>
-                <td style={{ padding: '12px', textAlign: 'center', border: '1px solid #eee', fontWeight: 'bold' }}>{c.credits}</td>
-                <td style={{ padding: '12px', textAlign: 'center', border: '1px solid #eee', whiteSpace: 'nowrap' }}>{cieTot(c.marks, mode)}/50</td>
-                <td style={{ padding: '12px', textAlign: 'center', border: '1px solid #eee', whiteSpace: 'nowrap' }}>{c.marks?.expectedSEE || '-'}/50</td>
-                <td style={{ padding: '12px', textAlign: 'center', border: '1px solid #eee', fontWeight: 'bold', color: c.grade === 'F' ? '#e11d48' : '#16a34a' }}>{c.grade || '-'}</td>
+                <td style={{ padding: '12px', textAlign: 'center', border: '1px solid #ccc', color: '#555' }}>{isPrac ? 'Practical' : 'Theory'}</td>
+                <td style={{ padding: '12px', textAlign: 'center', border: '1px solid #ccc', fontWeight: 'bold' }}>{c.credits}</td>
+                <td style={{ padding: '12px', textAlign: 'center', border: '1px solid #ccc', whiteSpace: 'nowrap' }}>{cieTot(c.marks, mode)}/50</td>
+                <td style={{ padding: '12px', textAlign: 'center', border: '1px solid #ccc', whiteSpace: 'nowrap' }}>{c.marks?.expectedSEE || '-'}/50</td>
+                <td style={{ padding: '12px', textAlign: 'center', border: '1px solid #ccc', fontWeight: 'bold', color: c.grade === 'F' ? '#e11d48' : '#16a34a' }}>{c.grade || '-'}</td>
               </tr>
             )
           })}
