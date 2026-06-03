@@ -771,3 +771,52 @@ body {
 }
 
 .page-enter { animation: fadeIn 0.35s ease; }
+
+/* ===== RESPONSIVE DESIGN (MOBILE & TABLET) ===== */
+@media (max-width: 768px) {
+  /* Navbar */
+  .navbar-inner { padding: 0 16px; gap: 8px; }
+  .logo-brand { font-size: 16px; }
+  .logo-sub { font-size: 9px; }
+  .nav-link { padding: 6px 12px; font-size: 13px; }
+  .navbar-nav { gap: 4px; }
+
+  /* Hero & Headings */
+  .hero { padding: 40px 16px 32px; }
+  .hero-title { font-size: clamp(32px, 8vw, 48px); }
+  .section-title { font-size: 24px; }
+  
+  /* Containers */
+  .container { padding: 0 16px; }
+  .card { padding: 16px; }
+  .course-card { padding: 16px; margin-bottom: 12px; }
+  
+  /* Home Grid */
+  .grade-ref-grid { grid-template-columns: repeat(2, 1fr); }
+  .branch-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
+  
+  /* Course Card Specifics */
+  .course-header { flex-direction: column; gap: 8px; }
+  .cie-row { gap: 8px; justify-content: space-between; }
+  .cie-field { width: calc(50% - 4px); }
+  .cie-input { width: 100%; }
+  .cie-total { width: 100%; margin-left: 0; align-items: center; }
+  .cie-divider { display: none; }
+  
+  /* SEE Inputs */
+  .see-input-row { flex-direction: column; align-items: stretch; gap: 12px; }
+  .see-input-wrap { justify-content: space-between; }
+  .predicted-grade { width: 100%; justify-content: center; }
+  
+  /* Records Grid */
+  .records-grid { grid-template-columns: 1fr; }
+  
+  /* Modal */
+  .modal-overlay { padding: 16px; }
+  .modal { padding: 20px; }
+}
+
+@media (max-width: 480px) {
+  /* Smallest screens */
+  .cie-field { width: 100%; }
+}
