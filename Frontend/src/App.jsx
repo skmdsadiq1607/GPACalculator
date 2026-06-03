@@ -71,16 +71,16 @@ export default function App() {
               <span className="logo-sub hide-on-mobile" style={{ fontSize: '10px', color: 'var(--text-secondary)', letterSpacing: '1px', textTransform: 'uppercase', fontWeight: 600 }}>GPA Calculator</span>
             </div>
           </NavLink>
-          <div className="navbar-nav" style={{ display: 'flex', alignItems: 'center', gap: '24px' }}>
+          <div className="navbar-nav">
             {user && (
               <>
-                <NavLink to="/calculator" className={({ isActive }) => `nav-link${isActive ? ' active' : ''}`}>Calculator</NavLink>
-                <NavLink to="/records" className={({ isActive }) => `nav-link${isActive ? ' active' : ''}`}>Records</NavLink>
+                <NavLink to="/calculator" className={({ isActive }) => `nav-link${isActive ? ' active' : ''}`} style={{ padding: '6px 12px', fontSize: '13px' }}>Calculator</NavLink>
+                <NavLink to="/records" className={({ isActive }) => `nav-link${isActive ? ' active' : ''}`} style={{ padding: '6px 12px', fontSize: '13px' }}>Records</NavLink>
               </>
             )}
             
             {user ? (
-              <div style={{ position: 'relative', marginLeft: '8px' }} ref={menuRef}>
+              <div style={{ position: 'relative', marginLeft: '4px' }} ref={menuRef}>
                 <button 
                   onClick={() => setMenuOpen(!menuOpen)}
                   style={{ 
