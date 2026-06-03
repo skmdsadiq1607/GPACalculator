@@ -336,8 +336,27 @@ function CourseCard({ course, onChange }) {
             <div className="split-section-header">
               <span>📚</span>
               <span className="split-theory-label">Theory Component</span>
-              <span style={{ marginLeft: 'auto', color: 'var(--text-muted)', fontWeight: 400 }}>
-                {course.theoryCredits} credit{course.theoryCredits !== 1 ? 's' : ''}
+              <span style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <select
+                  value={course.theoryCredits}
+                  onChange={(e) => {
+                    const tc = Number(e.target.value)
+                    onChange({
+                      ...course,
+                      theoryCredits: tc,
+                      practicalCredits: course.credits - tc
+                    })
+                  }}
+                  style={{ background: 'var(--bg-card)', color: 'var(--text-primary)', border: '1px solid var(--border)', borderRadius: '4px', padding: '2px 4px', fontSize: '12px', outline: 'none', cursor: 'pointer' }}
+                >
+                  {Array.from({ length: course.credits }).map((_, i) => {
+                    const val = i + 1; // 1 to credits
+                    return <option key={val} value={val}>{val}</option>
+                  })}
+                </select>
+                <span style={{ color: 'var(--text-muted)', fontWeight: 400, fontSize: '12px' }}>
+                  credits
+                </span>
               </span>
             </div>
             <div className="split-section-body">
@@ -355,8 +374,8 @@ function CourseCard({ course, onChange }) {
             <div className="split-section-header">
               <span>🔬</span>
               <span className="split-practical-label">Practical Component</span>
-              <span style={{ marginLeft: 'auto', color: 'var(--text-muted)', fontWeight: 400 }}>
-                {course.practicalCredits} credit{course.practicalCredits !== 1 ? 's' : ''}
+              <span style={{ marginLeft: 'auto', color: 'var(--text-muted)', fontWeight: 400, fontSize: '12px' }}>
+                {course.practicalCredits} credits (Auto)
               </span>
             </div>
             <div className="split-section-body">
