@@ -30,7 +30,12 @@ export default function App() {
       login(userData)
 
       // Fire and forget to log the user in backend
-      logUserSignIn(userData).catch(err => console.error('Failed to log sign in:', err))
+      logUserSignIn(userData).catch(err => {
+        console.error('Failed to log sign in:', err);
+        if (err.response && err.response.data) {
+          console.error('Backend error details:', err.response.data);
+        }
+      })
 
     } catch (err) {
       console.error('Login failed', err)

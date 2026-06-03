@@ -15,16 +15,20 @@ router.post('/login', async (req, res) => {
     const user = await User.findOneAndUpdate(
       { userId },
       {
-        $set: { name, email, picture },
-        $currentDate: { lastLogin: true }
+        $set: { 
+          name: name || 'Unknown', 
+          email, 
+          picture,
+          lastLogin: Date.now() 
+        }
       },
-      { upsert: true, new: true }
+      { upsert: true, new: true, runValidators: true }
     );
 
     res.status(200).json({ message: 'Login recorded', user });
   } catch (error) {
     console.error('Error logging user in:', error);
-    res.status(500).json({ error: 'Server error tracking login' });
+    res.status(500).json({ error: 'Server error tracking login', details: error.message, stack: error.stack });
   }
 });
 
