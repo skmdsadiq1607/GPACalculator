@@ -867,61 +867,8 @@ body {
   color: #666666 !important;
 }
 
-.pdf-export-mode .calculator-layout {
-  grid-template-columns: 1fr;
-  gap: 32px;
-}
+.pdf-table-view { display: none; }
 
-.pdf-export-mode .gpa-summary-panel {
-  position: static;
-  box-shadow: none;
-  background: #fafafa !important;
-  border: 2px solid var(--accent) !important;
-}
-
-.pdf-export-mode .course-card {
-  box-shadow: none !important;
-  background: #ffffff !important;
-  border: 1px solid #e5e5e5 !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-  break-inside: avoid;
-}
-
-.pdf-export-mode .course-category-badge {
-  color: #666 !important;
-  border-color: #ddd !important;
-  background: #f5f5f5 !important;
-}
-
-.pdf-export-mode .course-code {
-  background: rgba(253, 230, 138, 0.3) !important;
-  color: #b45309 !important; /* Darker yellow/gold for readability */
-  border: 1px solid rgba(253, 230, 138, 0.6) !important;
-}
-
-.pdf-export-mode .cie-total {
-  background: #f9f9f9 !important;
-  border-color: #eee !important;
-}
-
-.pdf-export-mode .see-needed-row {
-  background: #f9f9f9 !important;
-  border-color: #eee !important;
-}
-
-.pdf-export-mode .see-input {
-  background: #fff !important;
-  border-color: #ccc !important;
-  color: #000 !important;
-}
-
-.pdf-export-mode .split-section {
-  background: #fcfcfc !important;
-  border-color: #eee !important;
-}
-.pdf-export-mode .split-section-header {
-  background: #f5f5f5 !important;
-  border-color: #eee !important;
-  color: #333 !important;
-}
+.pdf-export-mode .pdf-table-view { display: block; }
+.pdf-export-mode .calculator-layout { display: none !important; }
+.pdf-export-mode .hide-in-tabular-pdf { display: none !important; }

@@ -105,6 +105,90 @@ function toCourseForSGPA(course) {
 }
 
 // ============================================================
+// PRINTABLE TABULAR SCORECARD (Hidden until PDF Export)
+// ============================================================
+function PrintableScorecard({ courses, sgpa }) {
+  const gradeableCourses = courses.map(toCourseForSGPA)
+  
+  return (
+    <div className="pdf-table-view">
+      <div style={{ marginBottom: '24px', padding: '16px', border: '2px solid var(--accent)', borderRadius: '8px', background: 'rgba(253, 230, 138, 0.1)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div>
+          <h2 style={{ margin: 0, fontSize: '18px', color: '#111' }}>Semester Performance Summary</h2>
+          <div style={{ fontSize: '13px', color: '#555', marginTop: '4px' }}>Based on official Anurag University grading criteria</div>
+        </div>
+        <div style={{ textAlign: 'right' }}>
+          <div style={{ fontSize: '14px', color: '#555', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: '700' }}>Predicted SGPA</div>
+          <div style={{ fontSize: '32px', fontWeight: '800', color: '#d97706', lineHeight: 1 }}>{sgpa.toFixed(2)}</div>
+        </div>
+      </div>
+
+      <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '12px' }}>
+        <thead>
+          <tr style={{ background: '#f5f5f5', borderBottom: '2px solid #ddd' }}>
+            <th style={{ padding: '12px', textAlign: 'left', border: '1px solid #eee', width: '40%' }}>Course Name & Code</th>
+            <th style={{ padding: '12px', textAlign: 'center', border: '1px solid #eee' }}>Type</th>
+            <th style={{ padding: '12px', textAlign: 'center', border: '1px solid #eee' }}>Credits</th>
+            <th style={{ padding: '12px', textAlign: 'center', border: '1px solid #eee' }}>CIE Total</th>
+            <th style={{ padding: '12px', textAlign: 'center', border: '1px solid #eee' }}>SEE Target</th>
+            <th style={{ padding: '12px', textAlign: 'center', border: '1px solid #eee' }}>Predicted Grade</th>
+          </tr>
+        </thead>
+        <tbody>
+          {gradeableCourses.map((c, i) => {
+            if (c.isTheoryPractical) {
+              const tc = c.theoryCredits ?? c.defaultTheoryCredits ?? 0
+              const pc = c.practicalCredits ?? (c.credits - tc)
+              return (
+                <React.Fragment key={i}>
+                  <tr style={{ borderBottom: '1px solid #eee', background: '#fff' }}>
+                    <td style={{ padding: '12px', border: '1px solid #eee' }}>
+                      <strong style={{ fontSize: '13px', color: '#111' }}>{c.title} (Theory)</strong><br/>
+                      <span style={{ color: '#888' }}>{c.code}</span>
+                    </td>
+                    <td style={{ padding: '12px', textAlign: 'center', border: '1px solid #eee', color: '#555' }}>Theory</td>
+                    <td style={{ padding: '12px', textAlign: 'center', border: '1px solid #eee', fontWeight: 'bold' }}>{tc}</td>
+                    <td style={{ padding: '12px', textAlign: 'center', border: '1px solid #eee' }}>{cieTot(c.theory, 'theory')} / 50</td>
+                    <td style={{ padding: '12px', textAlign: 'center', border: '1px solid #eee' }}>{c.theory?.expectedSEE || '—'} / 50</td>
+                    <td style={{ padding: '12px', textAlign: 'center', border: '1px solid #eee', fontWeight: 'bold', color: c.theoryGrade === 'F' ? '#e11d48' : '#16a34a' }}>{c.theoryGrade || '—'}</td>
+                  </tr>
+                  <tr style={{ borderBottom: '1px solid #eee', background: '#fafafa' }}>
+                    <td style={{ padding: '12px', border: '1px solid #eee', paddingLeft: '24px' }}>
+                      <strong style={{ fontSize: '13px', color: '#333' }}>{c.title} (Practical)</strong>
+                    </td>
+                    <td style={{ padding: '12px', textAlign: 'center', border: '1px solid #eee', color: '#555' }}>Practical</td>
+                    <td style={{ padding: '12px', textAlign: 'center', border: '1px solid #eee', fontWeight: 'bold' }}>{pc}</td>
+                    <td style={{ padding: '12px', textAlign: 'center', border: '1px solid #eee' }}>{cieTot(c.practical, 'practical')} / 50</td>
+                    <td style={{ padding: '12px', textAlign: 'center', border: '1px solid #eee' }}>{c.practical?.expectedSEE || '—'} / 50</td>
+                    <td style={{ padding: '12px', textAlign: 'center', border: '1px solid #eee', fontWeight: 'bold', color: c.practicalGrade === 'F' ? '#e11d48' : '#16a34a' }}>{c.practicalGrade || '—'}</td>
+                  </tr>
+                </React.Fragment>
+              )
+            }
+
+            const isPrac = c.category?.includes('Practical')
+            const mode = isPrac ? 'practical' : 'theory'
+            return (
+              <tr key={i} style={{ borderBottom: '1px solid #eee' }}>
+                <td style={{ padding: '12px', border: '1px solid #eee' }}>
+                  <strong style={{ fontSize: '13px', color: '#111' }}>{c.title}</strong><br/>
+                  <span style={{ color: '#888' }}>{c.code}</span>
+                </td>
+                <td style={{ padding: '12px', textAlign: 'center', border: '1px solid #eee', color: '#555' }}>{isPrac ? 'Practical' : 'Theory'}</td>
+                <td style={{ padding: '12px', textAlign: 'center', border: '1px solid #eee', fontWeight: 'bold' }}>{c.credits}</td>
+                <td style={{ padding: '12px', textAlign: 'center', border: '1px solid #eee' }}>{cieTot(c.marks, mode)} / 50</td>
+                <td style={{ padding: '12px', textAlign: 'center', border: '1px solid #eee' }}>{c.marks?.expectedSEE || '—'} / 50</td>
+                <td style={{ padding: '12px', textAlign: 'center', border: '1px solid #eee', fontWeight: 'bold', color: c.grade === 'F' ? '#e11d48' : '#16a34a' }}>{c.grade || '—'}</td>
+              </tr>
+            )
+          })}
+        </tbody>
+      </table>
+    </div>
+  )
+}
+
+// ============================================================
 // CIE INPUT BLOCK (shared by normal & split courses)
 // ============================================================
 function CIEBlock({ marks = {}, onChange, prefix, mode = 'theory' }) {
@@ -782,11 +866,13 @@ export default function Calculator() {
           </div>
         </div>
 
-      <div style={{ padding: '16px', borderRadius: '10px', background: 'rgba(250,200,0,0.04)', border: '1px solid var(--accent-border)', fontSize: '12px', color: 'var(--text-secondary)', marginBottom: '24px', display: 'flex', flexDirection: 'column', gap: '12px', overflow: 'hidden' }}>
+      <div className="hide-on-print" style={{ padding: '16px', borderRadius: '10px', background: 'rgba(250,200,0,0.04)', border: '1px solid var(--accent-border)', fontSize: '12px', color: 'var(--text-secondary)', marginBottom: '24px', display: 'flex', flexDirection: 'column', gap: '12px', overflow: 'hidden' }}>
         <span style={{ wordWrap: 'break-word', whiteSpace: 'normal' }}>📝 <strong style={{ color: 'var(--accent)' }}>CIE</strong> = Mid-1 (/20) + Mid-2 (/20) + Assignment (/10) = max 50</span>
         <span style={{ wordWrap: 'break-word', whiteSpace: 'normal' }}>📄 <strong style={{ color: 'var(--accent)' }}>SEE</strong> = End exam out of 50</span>
         <span style={{ wordWrap: 'break-word', whiteSpace: 'normal' }}>🎯 <strong style={{ color: 'var(--accent)' }}>Total</strong> = CIE + SEE out of 100 → grade determined</span>
       </div>
+
+      <PrintableScorecard courses={courses} sgpa={calculateSGPA(courses.map(toCourseForSGPA))} />
 
       <div className="calculator-layout">
         {/* Left: course cards */}
