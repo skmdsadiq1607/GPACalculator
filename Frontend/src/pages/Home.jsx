@@ -78,12 +78,19 @@ export default function Home() {
               { g: 'P',  pts: 4,  label: 'Pass',        color: '#a1a1aa' },
               { g: 'F',  pts: 0,  label: 'Fail',        color: '#ef4444' },
             ].map(item => (
-              <div key={item.g} className="grade-ref-item" style={{ border: '1px solid rgba(255,255,255,0.03)', background: 'rgba(255,255,255,0.01)' }}>
-                <div className="grade-ref-letter" style={{ color: item.color, fontSize: '24px', fontFamily: 'var(--font-main)', fontWeight: 800 }}>{item.g}</div>
-                <div className="grade-ref-points" style={{ color: 'var(--text-primary)', fontWeight: '600', fontSize: '13px' }}>
+              <div key={item.g} className="grade-ref-item" style={{ 
+                border: `1px solid ${item.color}33`, 
+                background: `linear-gradient(145deg, rgba(255,255,255,0.03) 0%, rgba(0,0,0,0.2) 100%)`,
+                boxShadow: `0 8px 24px ${item.color}11`,
+                borderRadius: '12px',
+                padding: '24px 16px',
+                transition: 'all 0.3s ease'
+              }}>
+                <div className="grade-ref-letter" style={{ color: item.color, fontSize: '28px', fontFamily: 'var(--font-main)', fontWeight: 900, textShadow: `0 0 16px ${item.color}44` }}>{item.g}</div>
+                <div className="grade-ref-points" style={{ color: 'var(--text-primary)', fontWeight: '700', fontSize: '14px', marginTop: '8px' }}>
                   {item.pts} pts
                 </div>
-                <div className="grade-ref-label" style={{ fontSize: '11px', opacity: 0.6 }}>{item.label}</div>
+                <div className="grade-ref-label" style={{ fontSize: '12px', color: 'var(--text-secondary)', fontWeight: 500, marginTop: '4px' }}>{item.label}</div>
               </div>
             ))}
           </div>
