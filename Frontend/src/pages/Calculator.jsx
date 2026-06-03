@@ -148,9 +148,9 @@ function PrintableScorecard({ courses, sgpa }) {
                     </td>
                     <td style={{ padding: '12px', textAlign: 'center', border: '1px solid #eee', color: '#555' }}>Theory</td>
                     <td style={{ padding: '12px', textAlign: 'center', border: '1px solid #eee', fontWeight: 'bold' }}>{tc}</td>
-                    <td style={{ padding: '12px', textAlign: 'center', border: '1px solid #eee' }}>{cieTot(c.theory, 'theory')} / 50</td>
-                    <td style={{ padding: '12px', textAlign: 'center', border: '1px solid #eee' }}>{c.theory?.expectedSEE || '—'} / 50</td>
-                    <td style={{ padding: '12px', textAlign: 'center', border: '1px solid #eee', fontWeight: 'bold', color: c.theoryGrade === 'F' ? '#e11d48' : '#16a34a' }}>{c.theoryGrade || '—'}</td>
+                    <td style={{ padding: '12px', textAlign: 'center', border: '1px solid #eee', whiteSpace: 'nowrap' }}>{cieTot(c.theory, 'theory')}/50</td>
+                    <td style={{ padding: '12px', textAlign: 'center', border: '1px solid #eee', whiteSpace: 'nowrap' }}>{c.theory?.expectedSEE || '-'}/50</td>
+                    <td style={{ padding: '12px', textAlign: 'center', border: '1px solid #eee', fontWeight: 'bold', color: c.theoryGrade === 'F' ? '#e11d48' : '#16a34a' }}>{c.theoryGrade || '-'}</td>
                   </tr>
                   <tr style={{ borderBottom: '1px solid #eee', background: '#fafafa' }}>
                     <td style={{ padding: '12px', border: '1px solid #eee', paddingLeft: '24px' }}>
@@ -158,9 +158,9 @@ function PrintableScorecard({ courses, sgpa }) {
                     </td>
                     <td style={{ padding: '12px', textAlign: 'center', border: '1px solid #eee', color: '#555' }}>Practical</td>
                     <td style={{ padding: '12px', textAlign: 'center', border: '1px solid #eee', fontWeight: 'bold' }}>{pc}</td>
-                    <td style={{ padding: '12px', textAlign: 'center', border: '1px solid #eee' }}>{cieTot(c.practical, 'practical')} / 50</td>
-                    <td style={{ padding: '12px', textAlign: 'center', border: '1px solid #eee' }}>{c.practical?.expectedSEE || '—'} / 50</td>
-                    <td style={{ padding: '12px', textAlign: 'center', border: '1px solid #eee', fontWeight: 'bold', color: c.practicalGrade === 'F' ? '#e11d48' : '#16a34a' }}>{c.practicalGrade || '—'}</td>
+                    <td style={{ padding: '12px', textAlign: 'center', border: '1px solid #eee', whiteSpace: 'nowrap' }}>{cieTot(c.practical, 'practical')}/50</td>
+                    <td style={{ padding: '12px', textAlign: 'center', border: '1px solid #eee', whiteSpace: 'nowrap' }}>{c.practical?.expectedSEE || '-'}/50</td>
+                    <td style={{ padding: '12px', textAlign: 'center', border: '1px solid #eee', fontWeight: 'bold', color: c.practicalGrade === 'F' ? '#e11d48' : '#16a34a' }}>{c.practicalGrade || '-'}</td>
                   </tr>
                 </React.Fragment>
               )
@@ -176,9 +176,9 @@ function PrintableScorecard({ courses, sgpa }) {
                 </td>
                 <td style={{ padding: '12px', textAlign: 'center', border: '1px solid #eee', color: '#555' }}>{isPrac ? 'Practical' : 'Theory'}</td>
                 <td style={{ padding: '12px', textAlign: 'center', border: '1px solid #eee', fontWeight: 'bold' }}>{c.credits}</td>
-                <td style={{ padding: '12px', textAlign: 'center', border: '1px solid #eee' }}>{cieTot(c.marks, mode)} / 50</td>
-                <td style={{ padding: '12px', textAlign: 'center', border: '1px solid #eee' }}>{c.marks?.expectedSEE || '—'} / 50</td>
-                <td style={{ padding: '12px', textAlign: 'center', border: '1px solid #eee', fontWeight: 'bold', color: c.grade === 'F' ? '#e11d48' : '#16a34a' }}>{c.grade || '—'}</td>
+                <td style={{ padding: '12px', textAlign: 'center', border: '1px solid #eee', whiteSpace: 'nowrap' }}>{cieTot(c.marks, mode)}/50</td>
+                <td style={{ padding: '12px', textAlign: 'center', border: '1px solid #eee', whiteSpace: 'nowrap' }}>{c.marks?.expectedSEE || '-'}/50</td>
+                <td style={{ padding: '12px', textAlign: 'center', border: '1px solid #eee', fontWeight: 'bold', color: c.grade === 'F' ? '#e11d48' : '#16a34a' }}>{c.grade || '-'}</td>
               </tr>
             )
           })}
