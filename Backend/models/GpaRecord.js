@@ -18,6 +18,8 @@ const semesterResultSchema = new mongoose.Schema({
 
 const gpaRecordSchema = new mongoose.Schema({
   studentName: { type: String, default: 'Student' },
+  userId: { type: String, default: null },
+  userEmail: { type: String, default: null },
   rollNumber: { type: String, default: '' },
   branch: { type: String, required: true },
   branchName: { type: String, required: true },

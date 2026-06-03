@@ -1,7 +1,8 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useContext } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { getRecords, deleteRecord } from '../api'
+import { getRecords, getUserRecords, deleteRecord } from '../api'
 import { getClassification, cgpaToPercentage, BRANCH_INFO } from '../utils'
+import { AuthContext } from '../context/AuthContext'
 
 export default function Records() {
   const [records, setRecords] = useState([])
@@ -9,9 +10,11 @@ export default function Records() {
   const [deleting, setDeleting] = useState(null)
   const [toast, setToast] = useState(null)
   const navigate = useNavigate()
+  const { user } = useContext(AuthContext)
 
   const loadRecords = () => {
-    getRecords()
+    const fetchFunc = user ? () => getUserRecords(user.userId) : getRecords
+    fetchFunc()
       .then(res => {
         setRecords(res.data)
         setLoading(false)
@@ -24,7 +27,7 @@ export default function Records() {
 
   useEffect(() => {
     loadRecords()
-  }, [])
+  }, [user])
 
   const showToast = (message, type = 'success') => {
     setToast({ message, type })

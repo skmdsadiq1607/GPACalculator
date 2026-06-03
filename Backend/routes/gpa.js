@@ -2,6 +2,30 @@ const express = require('express');
 const router = express.Router();
 const GpaRecord = require('../models/GpaRecord');
 const { curriculum, gradingScale } = require('../data/curriculum');
+const { OAuth2Client } = require('google-auth-library');
+
+const CLIENT_ID = process.env.GOOGLE_CLIENT_ID || '442244669533-03b8io2th50ep51jbgrpf3b0k4vup41n.apps.googleusercontent.com';
+const client = new OAuth2Client(CLIENT_ID);
+
+// POST /api/auth/google - verify Google token
+router.post('/auth/google', async (req, res) => {
+  try {
+    const { token } = req.body;
+    const ticket = await client.verifyIdToken({
+      idToken: token,
+      audience: CLIENT_ID,
+    });
+    const payload = ticket.getPayload();
+    res.json({
+      userId: payload['sub'],
+      email: payload['email'],
+      name: payload['name'],
+      picture: payload['picture']
+    });
+  } catch (err) {
+    res.status(401).json({ error: 'Invalid Google token' });
+  }
+});
 
 // GET /api/curriculum - return all curriculum data
 router.get('/curriculum', (req, res) => {
@@ -32,6 +56,16 @@ router.post('/records', async (req, res) => {
 router.get('/records', async (req, res) => {
   try {
     const records = await GpaRecord.find().sort({ updatedAt: -1 });
+    res.json(records);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// GET /api/records/user/:userId - get all records for a specific user
+router.get('/records/user/:userId', async (req, res) => {
+  try {
+    const records = await GpaRecord.find({ userId: req.params.userId }).sort({ updatedAt: -1 });
     res.json(records);
   } catch (err) {
     res.status(500).json({ error: err.message });
