@@ -58,7 +58,7 @@ export default function Records() {
     <div className="container page-enter" style={{ paddingTop: '40px', paddingBottom: '60px' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '32px', flexWrap: 'wrap', gap: '16px' }}>
         <div>
-          <h1 className="section-title" style={{ fontFamily: 'var(--font-display)', fontWeight: 600 }}>Academic Archive</h1>
+          <h1 className="section-title" style={{ fontFamily: 'var(--font-main)', fontWeight: 800 }}>Academic Archive</h1>
           <p className="section-subtitle">
             {records.length} stored record{records.length !== 1 ? 's' : ''} retrieved
           </p>
@@ -81,7 +81,7 @@ export default function Records() {
       ) : records.length === 0 ? (
         <div className="empty-state">
           <div className="empty-state-icon" style={{ opacity: 0.5 }}>🗄️</div>
-          <div className="empty-state-title" style={{ fontFamily: 'var(--font-display)', fontSize: '24px' }}>Archive Empty</div>
+          <div className="empty-state-title" style={{ fontFamily: 'var(--font-main)', fontWeight: 800, fontSize: '24px' }}>Archive Empty</div>
           <p style={{ marginBottom: '24px', fontSize: '14px', maxWidth: '400px', margin: '0 auto 24px' }}>
             There are no academic records associated with your account. Initialize a calculation to securely store your data here.
           </p>

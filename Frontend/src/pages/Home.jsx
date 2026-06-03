@@ -34,14 +34,14 @@ export default function Home() {
   return (
     <div className="container page-enter">
       {/* Hero */}
-      <div className="hero" style={{ padding: '100px 24px 80px' }}>
+      <div className="hero" style={{ padding: '80px 24px 60px' }}>
         <div className="hero-badge">
           <span></span>
           Anurag University • AY 2025-26
         </div>
         <h1 className="hero-title">
           Calculate Your GPA <br/>
-          <span className="italic-accent">Instantly.</span>
+          <span className="gradient-text">Instantly</span>
         </h1>
         <p className="hero-subtitle">
           An advanced academic tracking suite engineered specifically for Anurag University students. Authenticate to secure your records and project your performance.
@@ -89,7 +89,7 @@ export default function Home() {
       {user && (
         <div style={{ marginBottom: '80px' }}>
           <div className="section-header" style={{ textAlign: 'center' }}>
-            <h2 className="section-title" style={{ fontFamily: 'var(--font-display)', fontWeight: 600 }}>Academic Disciplines</h2>
+            <h2 className="section-title" style={{ fontFamily: 'var(--font-main)', fontWeight: 800 }}>Academic Disciplines</h2>
             <p className="section-subtitle">Select your enrolled department to initialize the calculation suite.</p>
           </div>
           <div className="branch-grid">
@@ -112,7 +112,7 @@ export default function Home() {
       {/* Grading Reference */}
       <div style={{ marginBottom: '80px', opacity: user ? 1 : 0.4, transition: 'opacity 0.3s' }}>
         <div className="section-header" style={{ textAlign: 'center' }}>
-          <h2 className="section-title" style={{ fontFamily: 'var(--font-display)', fontWeight: 600 }}>Evaluation Matrix</h2>
+          <h2 className="section-title" style={{ fontFamily: 'var(--font-main)', fontWeight: 800 }}>Evaluation Matrix</h2>
           <p className="section-subtitle">Institutional 10-point absolute grading framework.</p>
         </div>
         <div style={{ maxWidth: '800px', margin: '0 auto' }}>
@@ -128,7 +128,7 @@ export default function Home() {
               { g: 'F',  pts: 0,  label: 'Fail',        color: '#ef4444' },
             ].map(item => (
               <div key={item.g} className="grade-ref-item" style={{ border: '1px solid rgba(255,255,255,0.03)', background: 'rgba(255,255,255,0.01)' }}>
-                <div className="grade-ref-letter" style={{ color: item.color, fontSize: '24px', fontFamily: 'var(--font-display)', fontWeight: 700 }}>{item.g}</div>
+                <div className="grade-ref-letter" style={{ color: item.color, fontSize: '24px', fontFamily: 'var(--font-main)', fontWeight: 800 }}>{item.g}</div>
                 <div className="grade-ref-points" style={{ color: 'var(--text-primary)', fontWeight: '600', fontSize: '13px' }}>
                   {item.pts} pts
                 </div>

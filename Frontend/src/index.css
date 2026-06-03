@@ -3,12 +3,12 @@
    Palette: zinc-950 bg, #FAC800 yellow accent (IgniteXT brand)
    ============================================================ */
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,600;1,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 
 /* ===== CSS VARIABLES ===== */
 :root {
   --font-main: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  --font-display: 'Playfair Display', serif;
+  --font-display: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 
   /* Backgrounds */
   --bg-primary:   #060606;
@@ -167,16 +167,15 @@ body {
 }
 .hero-title {
   font-family: var(--font-display);
-  font-size: clamp(48px, 7vw, 84px);
-  font-weight: 700;
+  font-size: clamp(40px, 6vw, 64px);
+  font-weight: 800;
   line-height: 1.1;
   letter-spacing: -1.5px;
-  margin-bottom: 24px;
+  margin-bottom: 20px;
   color: var(--text-primary);
 }
 .hero-title .italic-accent {
-  font-style: italic;
-  font-weight: 600;
+  font-style: normal;
   color: var(--accent);
 }
 .gradient-text {
