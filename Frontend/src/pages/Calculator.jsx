@@ -449,13 +449,13 @@ function GPASummary({ courses, onSave, saving, savedId }) {
           c.isTheoryPractical ? (
             <div key={i}>
               <div className="subject-grade-item" style={{ marginBottom: '2px' }}>
-                <span className="subject-grade-item-name">📚 {c.code} Theory</span>
+                <span className="subject-grade-item-name" style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '70%' }} title={c.title}>📚 {c.title} (Theory)</span>
                 <span className={`subject-grade-item-grade grade-${gradeClass(c.theoryGrade)}`} style={{ padding: '2px 8px', borderRadius: '5px', border: '1px solid transparent' }}>
                   {c.theoryGrade || '—'}
                 </span>
               </div>
               <div className="subject-grade-item">
-                <span className="subject-grade-item-name">🔬 {c.code} Practical</span>
+                <span className="subject-grade-item-name" style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '70%' }} title={c.title}>🔬 {c.title} (Practical)</span>
                 <span className={`subject-grade-item-grade grade-${gradeClass(c.practicalGrade)}`} style={{ padding: '2px 8px', borderRadius: '5px', border: '1px solid transparent' }}>
                   {c.practicalGrade || '—'}
                 </span>
@@ -463,7 +463,7 @@ function GPASummary({ courses, onSave, saving, savedId }) {
             </div>
           ) : (
             <div key={i} className="subject-grade-item">
-              <span className="subject-grade-item-name">{c.code}</span>
+              <span className="subject-grade-item-name" style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '70%' }} title={c.title}>{c.title}</span>
               <span className={`subject-grade-item-grade grade-${gradeClass(c.grade)}`} style={{ padding: '2px 8px', borderRadius: '5px', border: '1px solid transparent' }}>
                 {c.grade || '—'}
               </span>
