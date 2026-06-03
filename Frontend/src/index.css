@@ -398,12 +398,12 @@ body {
   min-width: 60px;
 }
 .cie-label {
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 600;
   color: var(--text-muted);
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  white-space: nowrap;
+  line-height: 1.2;
 }
 .cie-input {
   width: 100%;
@@ -890,3 +890,9 @@ body {
 .pdf-export-mode .pdf-table-view { display: block; }
 .pdf-export-mode .calculator-layout { display: none !important; }
 .pdf-export-mode .hide-in-tabular-pdf { display: none !important; }
+@media (max-width: 500px) {
+  .course-card { padding: 16px; border-radius: 12px; }
+  .cie-row { gap: 6px; }
+  .cie-input { padding: 8px; font-size: 14px; }
+  .cie-divider { margin-top: 18px; font-size: 14px; }
+}
