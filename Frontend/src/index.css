@@ -819,6 +819,9 @@ body {
 @media (max-width: 480px) {
   /* Smallest screens */
   .cie-field { width: 100%; }
+  .hide-on-mobile { display: none !important; }
+  .nav-link { padding: 4px 8px; font-size: 11px; }
+  .navbar-inner { padding: 0 8px; }
 }
 
 /* ===== PDF EXPORT STYLES ===== */

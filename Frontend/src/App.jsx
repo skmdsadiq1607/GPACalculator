@@ -55,7 +55,7 @@ export default function App() {
                 <span style={{ color: '#ffffff' }}>Ignite</span>
                 <span style={{ color: 'var(--accent)' }}>XT</span>
               </span>
-              <span className="logo-sub" style={{ fontSize: '10px', color: 'var(--text-secondary)', letterSpacing: '1px', textTransform: 'uppercase', fontWeight: 600 }}>GPA Calculator</span>
+              <span className="logo-sub hide-on-mobile" style={{ fontSize: '10px', color: 'var(--text-secondary)', letterSpacing: '1px', textTransform: 'uppercase', fontWeight: 600 }}>GPA Calculator</span>
             </div>
           </NavLink>
           <div className="navbar-nav" style={{ display: 'flex', alignItems: 'center', gap: '24px' }}>
@@ -78,7 +78,7 @@ export default function App() {
                   }}
                 >
                   <img src={user.picture} alt={user.name} style={{ width: '30px', height: '30px', borderRadius: '50%', objectFit: 'cover' }} />
-                  <span style={{ fontSize: '13px', fontWeight: 600, letterSpacing: '0.2px' }}>{user.name.split(' ')[0]}</span>
+                  <span className="hide-on-mobile" style={{ fontSize: '13px', fontWeight: 600, letterSpacing: '0.2px' }}>{user.name.split(' ')[0]}</span>
                 </button>
                 
                 {menuOpen && (
