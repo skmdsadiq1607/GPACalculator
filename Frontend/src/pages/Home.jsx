@@ -18,7 +18,7 @@ export default function Home() {
       {/* Hero */}
       <div className="hero" style={{ padding: '100px 24px 80px', textAlign: 'center', position: 'relative' }}>
         <div style={{ position: 'absolute', top: '-100px', left: '50%', transform: 'translateX(-50%)', width: '600px', height: '600px', background: 'radial-gradient(circle, rgba(144, 97, 249, 0.15) 0%, rgba(0,0,0,0) 70%)', pointerEvents: 'none', zIndex: -1 }}></div>
-        <div className="hero-badge" style={{ display: 'inline-block', marginBottom: '24px', padding: '6px 16px', borderRadius: '30px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', fontSize: '12px', fontWeight: '600', letterSpacing: '1px', textTransform: 'uppercase', color: 'var(--accent)' }}>
+        <div className="hero-badge" style={{ display: 'inline-block', marginBottom: '24px', padding: '6px 16px', borderRadius: '30px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', fontSize: '13px', fontWeight: '600', letterSpacing: '0.5px', color: 'var(--accent)' }}>
           Built for Anuragians by IgniteXT
         </div>
         <h1 className="hero-title" style={{ fontSize: 'clamp(40px, 6vw, 64px)', lineHeight: '1.1', fontWeight: '800', letterSpacing: '-1.5px', marginBottom: '24px' }}>
