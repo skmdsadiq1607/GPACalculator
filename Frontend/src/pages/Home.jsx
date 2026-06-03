@@ -19,14 +19,14 @@ export default function Home() {
       <div className="hero" style={{ padding: '80px 24px 60px' }}>
         <div className="hero-badge">
           <span></span>
-          Anurag University • AY 2025-26
+          Built for Anuragians by IgniteXT
         </div>
         <h1 className="hero-title">
-          Calculate Your GPA <br/>
-          <span className="gradient-text">Instantly</span>
+          Master Your Grades <br/>
+          <span className="gradient-text">With Precision</span>
         </h1>
         <p className="hero-subtitle">
-          An advanced academic tracking suite engineered specifically for Anurag University students. Authenticate to secure your records and project your performance.
+          The most advanced academic tracking suite for Anurag University. Automatically calculate your SGPA, set target grades, and generate professional PDF reports.
         </p>
         
         <div style={{ display: 'flex', gap: '16px', justifyContent: 'center', flexWrap: 'wrap', marginTop: '40px' }}>
