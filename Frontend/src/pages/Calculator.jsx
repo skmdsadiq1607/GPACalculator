@@ -547,12 +547,15 @@ function Toast({ message, type, onDismiss }) {
 // ============================================================
 // BRANCH + SEMESTER SELECTOR
 // ============================================================
-function BranchSemSelector({ curriculum, onSelect }) {
+function BranchSemSelector({ curriculum, onSelect, onBackHome }) {
   const [branch, setBranch] = useState(null)
 
   if (!branch) {
     return (
       <div className="page-enter">
+        <button className="btn btn-ghost hide-on-print" style={{ marginBottom: '16px', fontSize: '13px', paddingLeft: 0 }} onClick={onBackHome}>
+          ← Home
+        </button>
         <div className="section-header">
           <h1 className="section-title">Select Your Branch</h1>
           <p className="section-subtitle">Choose your B.Tech branch — courses will be pre-loaded from the AU 2025-26 curriculum</p>
@@ -741,7 +744,7 @@ export default function Calculator() {
   if (!selectedBranch || !selectedSem) {
     return (
       <div className="container" style={{ paddingTop: '40px', paddingBottom: '60px' }}>
-        <BranchSemSelector curriculum={curriculum || {}} onSelect={handleSelect} />
+        <BranchSemSelector curriculum={curriculum || {}} onSelect={handleSelect} onBackHome={() => navigate('/')} />
       </div>
     )
   }
