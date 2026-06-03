@@ -50,8 +50,8 @@ export default function App() {
       <nav className="navbar" style={{ background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(32px)', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
         <div className="navbar-inner">
           <NavLink to="/" className="navbar-logo" style={{ textDecoration: 'none' }}>
-            <div className="logo-text" style={{ flexDirection: 'row', alignItems: 'center', gap: '8px' }}>
-              <span className="logo-brand" style={{ fontFamily: 'var(--font-main)', fontWeight: 800, fontSize: '20px', letterSpacing: '-0.5px' }}>
+            <div className="logo-text" style={{ flexDirection: 'column', alignItems: 'flex-start' }}>
+              <span className="logo-brand" style={{ fontFamily: 'var(--font-main)', fontWeight: 800, fontSize: '20px', letterSpacing: '-0.5px', lineHeight: '1.2' }}>
                 <span style={{ color: '#ffffff' }}>Ignite</span>
                 <span style={{ color: 'var(--accent)' }}>XT</span>
               </span>
@@ -111,7 +111,17 @@ export default function App() {
                   </div>
                 )}
               </div>
-            ) : null}
+            ) : (
+              <div style={{ transform: 'scale(0.85)', transformOrigin: 'right' }}>
+                <GoogleLogin
+                  onSuccess={handleSuccess}
+                  onError={() => console.error('Login Failed')}
+                  theme="filled_black"
+                  shape="pill"
+                  text="signin_with"
+                />
+              </div>
+            )}
           </div>
         </div>
       </nav>
@@ -124,6 +134,28 @@ export default function App() {
           <Route path="/records" element={<ProtectedRoute><Records /></ProtectedRoute>} />
         </Routes>
       </main>
+
+      <footer style={{ 
+        padding: '40px 20px', 
+        textAlign: 'center', 
+        borderTop: '1px solid rgba(255,255,255,0.05)',
+        marginTop: 'auto',
+        fontFamily: 'var(--font-main)'
+      }}>
+        <div style={{ fontSize: '11px', color: 'var(--text-secondary)', letterSpacing: '1px', textTransform: 'uppercase', marginBottom: '24px', fontWeight: 600 }}>
+          © 2026 IGNITEXT STUDENT COMMUNITY. ALL RIGHTS RESERVED.
+        </div>
+        <div style={{ fontSize: '14px', color: '#ffffff', marginBottom: '16px' }}>
+          Made with ❤️ by <span style={{ color: 'var(--accent)', fontWeight: 600 }}>IgniteXT Technical Team</span>
+        </div>
+        <div style={{ fontSize: '14px', color: 'var(--text-secondary)', fontWeight: 600, display: 'flex', justifyContent: 'center', gap: '12px', flexWrap: 'wrap' }}>
+          <span style={{ color: 'var(--accent)' }}>Sadiq</span> | 
+          <span style={{ color: 'var(--accent)' }}>Mrudhula</span> | 
+          <span style={{ color: 'var(--accent)' }}>Santhoshini</span> | 
+          <span style={{ color: 'var(--accent)' }}>Rohit</span> | 
+          <span style={{ color: 'var(--accent)' }}>Tehnaaz</span>
+        </div>
+      </footer>
     </div>
   )
 }

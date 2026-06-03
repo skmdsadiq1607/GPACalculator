@@ -1,7 +1,5 @@
 import { useNavigate } from 'react-router-dom'
 import { useContext } from 'react'
-import { GoogleLogin } from '@react-oauth/google'
-import { jwtDecode } from 'jwt-decode'
 import { AuthContext } from '../context/AuthContext'
 import { BRANCH_INFO } from '../utils'
 
@@ -14,22 +12,7 @@ const features = [
 
 export default function Home() {
   const navigate = useNavigate()
-  const { user, login } = useContext(AuthContext)
-
-  const handleSuccess = async (credentialResponse) => {
-    try {
-      const decoded = jwtDecode(credentialResponse.credential)
-      login({
-        userId: decoded.sub,
-        email: decoded.email,
-        name: decoded.name,
-        picture: decoded.picture,
-        token: credentialResponse.credential
-      })
-    } catch (err) {
-      console.error('Login failed', err)
-    }
-  }
+  const { user } = useContext(AuthContext)
 
   return (
     <div className="container page-enter">
@@ -48,18 +31,7 @@ export default function Home() {
         </p>
         
         <div style={{ display: 'flex', gap: '16px', justifyContent: 'center', flexWrap: 'wrap', marginTop: '40px' }}>
-          {!user ? (
-            <div style={{ padding: '4px', background: 'rgba(255,255,255,0.03)', borderRadius: '99px', border: '1px solid rgba(255,255,255,0.1)' }}>
-              <GoogleLogin
-                onSuccess={handleSuccess}
-                onError={() => console.error('Login Failed')}
-                theme="filled_black"
-                shape="pill"
-                text="continue_with"
-                size="large"
-              />
-            </div>
-          ) : (
+          {user ? (
             <>
               <button className="btn btn-primary" onClick={() => navigate('/calculator')}>
                 Launch Calculator
@@ -68,6 +40,10 @@ export default function Home() {
                 View Archive
               </button>
             </>
+          ) : (
+            <div style={{ padding: '12px 24px', background: 'rgba(255,255,255,0.03)', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)', color: 'var(--text-secondary)', fontSize: '14px' }}>
+              Please sign in using the button in the top right to continue.
+            </div>
           )}
         </div>
       </div>
