@@ -69,7 +69,7 @@ export default function Records() {
       </div>
 
       {loading ? (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '16px' }}>
+        <div className="records-grid">
           {[1, 2, 3].map(i => (
             <div key={i} className="card" style={{ height: '180px' }}>
               <div className="skeleton" style={{ height: '18px', width: '60%', marginBottom: '8px' }}></div>

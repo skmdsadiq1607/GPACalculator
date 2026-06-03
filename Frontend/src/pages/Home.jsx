@@ -67,7 +67,7 @@ export default function Home() {
           <p className="section-subtitle">Institutional 10-point absolute grading framework.</p>
         </div>
         <div style={{ maxWidth: '800px', margin: '0 auto' }}>
-          <div className="grade-ref-grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(80px, 1fr))', gap: '12px' }}>
+          <div className="grade-ref-grid">
             {[
               { g: 'O',  pts: 10, label: 'Outstanding', color: '#22c55e' },
               { g: 'A+', pts: 9,  label: 'Excellent',   color: 'var(--accent)' },
