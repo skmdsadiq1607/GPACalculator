@@ -1,0 +1,14 @@
+{
+  "name": "gpa-calculator",
+  "version": "1.0.0",
+  "description": "MERN GPA Calculator for Anurag University",
+  "scripts": {
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "server": "cd Backend && npm run dev",
+    "client": "cd Frontend && npm run dev",
+    "install-all": "npm install && cd Backend && npm install && cd ../Frontend && npm install"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

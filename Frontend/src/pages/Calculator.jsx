@@ -1,0 +1,773 @@
+import { useState, useEffect, useCallback } from 'react'
+import { useSearchParams, useParams, useNavigate } from 'react-router-dom'
+import { getCurriculum, saveRecord, getRecord, updateRecord } from '../api'
+import { calculateSGPA, calculateCGPA, getClassification, cgpaToPercentage, BRANCH_INFO, GRADE_POINTS } from '../utils'
+
+// ============================================================
+// CONSTANTS & HELPERS
+// ============================================================
+
+const GRADE_THRESHOLDS = [
+  { grade: 'O',  label: 'O',  min: 90 },
+  { grade: 'A+', label: 'A+', min: 80 },
+  { grade: 'A',  label: 'A',  min: 70 },
+  { grade: 'B+', label: 'B+', min: 60 },
+  { grade: 'B',  label: 'B',  min: 50 },
+  { grade: 'C',  label: 'C',  min: 40 },
+]
+
+function predictGrade(cie, expectedSEE) {
+  if (expectedSEE === '' || expectedSEE === null || expectedSEE === undefined) return null
+  const total = cie + Number(expectedSEE)
+  if (total >= 90) return 'O'
+  if (total >= 80) return 'A+'
+  if (total >= 70) return 'A'
+  if (total >= 60) return 'B+'
+  if (total >= 50) return 'B'
+  if (total >= 40) return 'C'
+  return 'F'
+}
+
+function seeNeeded(cie, threshold) {
+  const needed = threshold - cie
+  if (needed <= 0) return { status: 'achieved', needed: 0 }
+  if (needed > 50)  return { status: 'impossible', needed }
+  return { status: 'possible', needed }
+}
+
+function clamp(v, min, max) {
+  const n = Number(v)
+  if (isNaN(n)) return min
+  return Math.min(Math.max(n, min), max)
+}
+
+// Turn a grade string into a CSS class suffix
+function gradeClass(g) {
+  if (!g) return 'none'
+  if (g === 'A+') return 'Ap'
+  if (g === 'B+') return 'Bp'
+  return g
+}
+
+// Initialise a fresh course object from curriculum data
+function initCourse(c) {
+  const base = {
+    code: c.code, title: c.title, credits: c.credits,
+    category: c.category, isTheoryPractical: !!c.isTheoryPractical,
+    defaultTheoryCredits: c.defaultTheoryCredits,
+  }
+  if (c.isTheoryPractical) {
+    const tc = c.defaultTheoryCredits ?? Math.max(1, c.credits - 1)
+    return {
+      ...base,
+      theoryCredits: tc,
+      practicalCredits: c.credits - tc,
+      theory:    { mid1: '', mid2: '', assignment: '', expectedSEE: '' },
+      practical: { mid1: '', mid2: '', assignment: '', expectedSEE: '' },
+    }
+  }
+  return { ...base, mid1: '', mid2: '', assignment: '', expectedSEE: '' }
+}
+
+// Compute CIE total from a mark set
+function cieTot(marks, mode) {
+  if (mode === 'practical') {
+    return (Number(marks.dayToDay) || 0) + (Number(marks.skillTest) || 0)
+  }
+  return (Number(marks.mid1) || 0) + (Number(marks.mid2) || 0) + (Number(marks.assignment) || 0)
+}
+
+// Get predicted grade from a mark set
+function getGrade(marks, mode) {
+  const cie = cieTot(marks, mode)
+  return predictGrade(cie, marks.expectedSEE)
+}
+
+// Convert a CIE/SEE course to a grade-based course for SGPA calc
+function toCourseForSGPA(course) {
+  if (course.isTheoryPractical) {
+    return {
+      ...course,
+      theoryGrade:    getGrade(course.theory, 'theory'),
+      practicalGrade: getGrade(course.practical, 'practical'),
+    }
+  }
+  const isPrac = course.category && course.category.includes('Practical')
+  const mode = isPrac ? 'practical' : 'theory'
+  return { ...course, grade: getGrade(course, mode) }
+}
+
+// ============================================================
+// CIE INPUT BLOCK (shared by normal & split courses)
+// ============================================================
+function CIEBlock({ marks, onChange, prefix, mode = 'theory' }) {
+  const cie = cieTot(marks, mode)
+  const grade = predictGrade(cie, marks.expectedSEE)
+
+  const handleNum = (field, max) => (e) => {
+    const raw = e.target.value
+    if (raw === '') { onChange(field, ''); return }
+    onChange(field, clamp(raw, 0, max))
+  }
+
+  return (
+    <div>
+      {/* CIE inputs */}
+      <div className="cie-row">
+        {mode === 'exploratory' ? (
+          <>
+            <div className="cie-field">
+              <span className="cie-label">Mid-1 <span style={{ color: 'var(--text-muted)' }}>/40</span></span>
+              <input
+                id={`${prefix}-mid1`}
+                type="number" min={0} max={40}
+                className="cie-input"
+                value={marks.mid1 ?? ''}
+                onChange={handleNum('mid1', 40)}
+                placeholder="0"
+              />
+            </div>
+            <span className="cie-divider">+</span>
+
+            <div className="cie-field">
+              <span className="cie-label">Mid-2 <span style={{ color: 'var(--text-muted)' }}>/40</span></span>
+              <input
+                id={`${prefix}-mid2`}
+                type="number" min={0} max={40}
+                className="cie-input"
+                value={marks.mid2 ?? ''}
+                onChange={handleNum('mid2', 40)}
+                placeholder="0"
+              />
+            </div>
+            <span className="cie-divider">+</span>
+
+            <div className="cie-field">
+              <span className="cie-label">Assignment <span style={{ color: 'var(--text-muted)' }}>/20</span></span>
+              <input
+                id={`${prefix}-asgn`}
+                type="number" min={0} max={20}
+                className="cie-input"
+                value={marks.assignment ?? ''}
+                onChange={handleNum('assignment', 20)}
+                placeholder="0"
+              />
+            </div>
+          </>
+        ) : mode === 'theory' ? (
+          <>
+            <div className="cie-field">
+              <span className="cie-label">Mid-1 <span style={{ color: 'var(--text-muted)' }}>/20</span></span>
+              <input
+                id={`${prefix}-mid1`}
+                type="number" min={0} max={20}
+                className="cie-input"
+                value={marks.mid1 ?? ''}
+                onChange={handleNum('mid1', 20)}
+                placeholder="0"
+              />
+            </div>
+            <span className="cie-divider">+</span>
+
+            <div className="cie-field">
+              <span className="cie-label">Mid-2 <span style={{ color: 'var(--text-muted)' }}>/20</span></span>
+              <input
+                id={`${prefix}-mid2`}
+                type="number" min={0} max={20}
+                className="cie-input"
+                value={marks.mid2 ?? ''}
+                onChange={handleNum('mid2', 20)}
+                placeholder="0"
+              />
+            </div>
+            <span className="cie-divider">+</span>
+
+            <div className="cie-field">
+              <span className="cie-label">Assignment <span style={{ color: 'var(--text-muted)' }}>/10</span></span>
+              <input
+                id={`${prefix}-asgn`}
+                type="number" min={0} max={10}
+                className="cie-input"
+                value={marks.assignment ?? ''}
+                onChange={handleNum('assignment', 10)}
+                placeholder="0"
+              />
+            </div>
+          </>
+        ) : (
+          <>
+            <div className="cie-field">
+              <span className="cie-label">Day-to-day <span style={{ color: 'var(--text-muted)' }}>/20</span></span>
+              <input
+                id={`${prefix}-day`}
+                type="number" min={0} max={20}
+                className="cie-input"
+                value={marks.dayToDay ?? ''}
+                onChange={handleNum('dayToDay', 20)}
+                placeholder="0"
+              />
+            </div>
+            <span className="cie-divider">+</span>
+
+            <div className="cie-field">
+              <span className="cie-label">Skill Test <span style={{ color: 'var(--text-muted)' }}>/30</span></span>
+              <input
+                id={`${prefix}-skill`}
+                type="number" min={0} max={30}
+                className="cie-input"
+                value={marks.skillTest ?? ''}
+                onChange={handleNum('skillTest', 30)}
+                placeholder="0"
+              />
+            </div>
+          </>
+        )}
+
+        <span className="cie-divider">=</span>
+
+        <div className="cie-total">
+          <span className="cie-label">CIE Total</span>
+          <span className="cie-total-value" style={{
+            color: cie >= (mode === 'exploratory' ? 40 : 20) ? 'var(--accent)' : cie > 0 ? 'var(--orange)' : 'var(--text-muted)'
+          }}>
+            {cie}<span style={{ fontSize: '13px', fontWeight: 400, color: 'var(--text-muted)' }}>/{mode === 'exploratory' ? '100' : '50'}</span>
+          </span>
+        </div>
+      </div>
+
+      {/* SEE needed chips — only show when CIE > 0 and mode is not exploratory */}
+      {cie > 0 && mode !== 'exploratory' && (
+        <div className="see-needed-row">
+          <span className="see-needed-label">SEE needed →</span>
+          {GRADE_THRESHOLDS.map(({ grade: g, label, min }) => {
+            const { status, needed } = seeNeeded(cie, min)
+            return (
+              <span
+                key={g}
+                className={`see-chip ${
+                  status === 'achieved'   ? 'see-chip-achieved'  :
+                  status === 'impossible' ? 'see-chip-impossible' : 'see-chip-possible'
+                }`}
+              >
+                <strong>{label}:</strong>{' '}
+                {status === 'achieved'   ? '✓ Done' :
+                 status === 'impossible' ? `${needed}/50 ✗` :
+                 `${needed}/50`}
+              </span>
+            )
+          })}
+        </div>
+      )}
+
+      {/* Expected SEE + predicted grade */}
+      {mode !== 'exploratory' && (
+        <div className="see-input-row">
+          <div className="see-input-wrap">
+            <span className="see-label">Expected SEE:</span>
+            <input
+              id={`${prefix}-see`}
+              type="number" min={0} max={50}
+              className="see-input"
+              value={marks.expectedSEE ?? ''}
+              onChange={(e) => {
+                const raw = e.target.value
+                if (raw === '') { onChange('expectedSEE', ''); return }
+                onChange('expectedSEE', clamp(raw, 0, 50))
+              }}
+              placeholder="—"
+            />
+            <span className="see-max">/50</span>
+          </div>
+
+          {grade && (
+            <div className={`predicted-grade grade-${gradeClass(grade)}`}>
+              <span style={{ fontSize: '12px', fontWeight: 500, opacity: 0.7 }}>Predicted:</span>
+              <strong>{grade}</strong>
+              <span style={{ fontSize: '11px', opacity: 0.7 }}>
+                {Math.min(cie + Number(marks.expectedSEE || 0), 100)}/100
+              </span>
+            </div>
+          )}
+          {marks.expectedSEE !== '' && !grade && (
+            <div className="predicted-grade grade-F">
+              <span style={{ fontSize: '12px', fontWeight: 500, opacity: 0.7 }}>Predicted:</span>
+              <strong>F</strong>
+              <span style={{ fontSize: '11px', opacity: 0.7 }}>
+                {Math.min(cie + Number(marks.expectedSEE || 0), 100)}/100
+              </span>
+            </div>
+          )}
+        </div>
+      )}
+      {mode === 'exploratory' && grade && (
+        <div className="see-input-row" style={{ marginTop: '12px' }}>
+          <div className={`predicted-grade grade-${gradeClass(grade)}`}>
+            <span style={{ fontSize: '12px', fontWeight: 500, opacity: 0.7 }}>Grade:</span>
+            <strong>{grade}</strong>
+            <span style={{ fontSize: '11px', opacity: 0.7 }}>{cie}/100</span>
+          </div>
+        </div>
+      )}
+      {mode === 'exploratory' && !grade && cie > 0 && (
+        <div className="see-input-row" style={{ marginTop: '12px' }}>
+          <div className="predicted-grade grade-F">
+            <span style={{ fontSize: '12px', fontWeight: 500, opacity: 0.7 }}>Grade:</span>
+            <strong>F</strong>
+            <span style={{ fontSize: '11px', opacity: 0.7 }}>{cie}/100</span>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
+// ============================================================
+// COURSE CARD
+// ============================================================
+function CourseCard({ course, onChange }) {
+  const handleChange = useCallback((field, value) => {
+    onChange({ ...course, [field]: value })
+  }, [course, onChange])
+
+  const handleSplitChange = useCallback((part, field, value) => {
+    onChange({ ...course, [part]: { ...course[part], [field]: value } })
+  }, [course, onChange])
+
+  return (
+    <div className="course-card">
+      {/* Header */}
+      <div className="course-header">
+        <div style={{ flex: 1 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px', flexWrap: 'wrap' }}>
+            <span className="course-code">{course.code}</span>
+            <span className="course-category-badge">{course.category}</span>
+            {course.isTheoryPractical && (
+              <span style={{ fontSize: '10px', color: 'var(--accent)', background: 'var(--accent-dim)', border: '1px solid var(--accent-border)', padding: '2px 8px', borderRadius: '4px', fontWeight: '700' }}>
+                T+P Split
+              </span>
+            )}
+          </div>
+          <div className="course-title">{course.title}</div>
+        </div>
+        <div style={{ textAlign: 'right', flexShrink: 0 }}>
+          <div style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Credits</div>
+          <div style={{ fontSize: '20px', fontWeight: '800', color: 'var(--accent)' }}>{course.credits}</div>
+        </div>
+      </div>
+
+      {/* Theory + Practical OR single */}
+      {course.isTheoryPractical ? (
+        <>
+          {/* Theory */}
+          <div className="split-section" style={{ marginBottom: '10px' }}>
+            <div className="split-section-header">
+              <span>📚</span>
+              <span className="split-theory-label">Theory Component</span>
+              <span style={{ marginLeft: 'auto', color: 'var(--text-muted)', fontWeight: 400 }}>
+                {course.theoryCredits} credit{course.theoryCredits !== 1 ? 's' : ''}
+              </span>
+            </div>
+            <div className="split-section-body">
+              <CIEBlock
+                marks={course.theory}
+                onChange={(f, v) => handleSplitChange('theory', f, v)}
+                prefix={`${course.code}-theory`}
+                mode="theory"
+              />
+            </div>
+          </div>
+
+          {/* Practical */}
+          <div className="split-section">
+            <div className="split-section-header">
+              <span>🔬</span>
+              <span className="split-practical-label">Practical Component</span>
+              <span style={{ marginLeft: 'auto', color: 'var(--text-muted)', fontWeight: 400 }}>
+                {course.practicalCredits} credit{course.practicalCredits !== 1 ? 's' : ''}
+              </span>
+            </div>
+            <div className="split-section-body">
+              <CIEBlock
+                marks={course.practical}
+                onChange={(f, v) => handleSplitChange('practical', f, v)}
+                prefix={`${course.code}-practical`}
+                mode="practical"
+              />
+            </div>
+          </div>
+        </>
+      ) : (
+        <CIEBlock
+          marks={course}
+          onChange={handleChange}
+          prefix={course.code}
+          mode={
+            course.category && course.category.includes('Practical') ? 'practical' :
+            course.category && course.category.includes('Exploratory') ? 'exploratory' : 'theory'
+          }
+        />
+      )}
+    </div>
+  )
+}
+
+// ============================================================
+// GPA SUMMARY SIDEBAR
+// ============================================================
+function GPASummary({ courses, onSave, saving, savedId }) {
+  // Build grade-compatible courses for calculation
+  const gradeableCourses = courses.map(toCourseForSGPA)
+  const sgpa = calculateSGPA(gradeableCourses)
+  const fakeSemesters = [{ courses: gradeableCourses }]
+  const cgpa = calculateCGPA(fakeSemesters)
+  const classification = getClassification(cgpa)
+  const percentage = cgpaToPercentage(cgpa)
+
+  const totalCredits = courses.reduce((a, c) => a + c.credits, 0)
+  const gradedCredits = gradeableCourses.reduce((a, c) => {
+    if (c.isTheoryPractical) {
+      const tc = c.theoryCredits ?? 0
+      const pc = c.practicalCredits ?? 0
+      return a + (c.theoryGrade ? tc : 0) + (c.practicalGrade ? pc : 0)
+    }
+    return a + (c.grade ? c.credits : 0)
+  }, 0)
+  const progress = totalCredits > 0 ? (gradedCredits / totalCredits) * 100 : 0
+
+  return (
+    <div className="gpa-summary-panel">
+      <div className="gpa-header">
+        <div className="gpa-score">{sgpa > 0 ? sgpa.toFixed(2) : '—'}</div>
+        <div className="gpa-label">Predicted SGPA</div>
+      </div>
+
+      {classification && (
+        <div style={{ padding: '14px 20px 0' }}>
+          <div className={`class-badge ${classification.className}`}>{classification.label}</div>
+        </div>
+      )}
+
+      <div className="gpa-details">
+        <div className="gpa-stat">
+          <span className="gpa-stat-label">CGPA</span>
+          <span className="gpa-stat-value" style={{ color: 'var(--accent)', fontSize: '17px' }}>{cgpa > 0 ? cgpa.toFixed(2) : '—'}</span>
+        </div>
+        <div className="gpa-stat">
+          <span className="gpa-stat-label">Equivalent %</span>
+          <span className="gpa-stat-value">{cgpa > 0 ? `${percentage}%` : '—'}</span>
+        </div>
+        <div className="gpa-stat">
+          <span className="gpa-stat-label">Credits Graded</span>
+          <span className="gpa-stat-value">{gradedCredits} / {totalCredits}</span>
+        </div>
+      </div>
+
+      {/* Progress */}
+      <div style={{ padding: '12px 20px 0' }}>
+        <div style={{ fontSize: '11px', color: 'var(--text-muted)', marginBottom: '6px' }}>Completion: {Math.round(progress)}%</div>
+        <div className="progress-bar"><div className="progress-fill" style={{ width: `${progress}%` }} /></div>
+      </div>
+
+      {/* Per-subject grades */}
+      <div style={{ padding: '16px 20px 0' }}>
+        <div style={{ fontSize: '11px', color: 'var(--text-muted)', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '8px' }}>Subject Grades</div>
+      </div>
+      <div className="subject-grade-list">
+        {gradeableCourses.map((c, i) => (
+          c.isTheoryPractical ? (
+            <div key={i}>
+              <div className="subject-grade-item" style={{ marginBottom: '2px' }}>
+                <span className="subject-grade-item-name">📚 {c.code} Theory</span>
+                <span className={`subject-grade-item-grade grade-${gradeClass(c.theoryGrade)}`} style={{ padding: '2px 8px', borderRadius: '5px', border: '1px solid transparent' }}>
+                  {c.theoryGrade || '—'}
+                </span>
+              </div>
+              <div className="subject-grade-item">
+                <span className="subject-grade-item-name">🔬 {c.code} Practical</span>
+                <span className={`subject-grade-item-grade grade-${gradeClass(c.practicalGrade)}`} style={{ padding: '2px 8px', borderRadius: '5px', border: '1px solid transparent' }}>
+                  {c.practicalGrade || '—'}
+                </span>
+              </div>
+            </div>
+          ) : (
+            <div key={i} className="subject-grade-item">
+              <span className="subject-grade-item-name">{c.code}</span>
+              <span className={`subject-grade-item-grade grade-${gradeClass(c.grade)}`} style={{ padding: '2px 8px', borderRadius: '5px', border: '1px solid transparent' }}>
+                {c.grade || '—'}
+              </span>
+            </div>
+          )
+        ))}
+      </div>
+
+      <div className="divider" style={{ margin: '12px 0' }} />
+
+      <div style={{ padding: '0 20px 20px' }}>
+        <button className="btn btn-primary" style={{ width: '100%', justifyContent: 'center' }} onClick={onSave} disabled={saving}>
+          {saving ? '⏳ Saving...' : savedId ? '💾 Update Record' : '💾 Save Record'}
+        </button>
+      </div>
+    </div>
+  )
+}
+
+// ============================================================
+// SAVE MODAL
+// ============================================================
+function SaveModal({ show, onClose, onSave, studentName, setStudentName, rollNumber, setRollNumber }) {
+  if (!show) return null
+  return (
+    <div className="modal-overlay" onClick={onClose}>
+      <div className="modal" onClick={e => e.stopPropagation()}>
+        <h2 className="modal-title">💾 Save Record</h2>
+        <p className="modal-subtitle">Save your predicted GPA to MongoDB for future reference.</p>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+          <div className="input-group">
+            <label className="input-label">Student Name</label>
+            <input id="save-name" className="input" placeholder="e.g., Sadiq Mohammed" value={studentName} onChange={e => setStudentName(e.target.value)} />
+          </div>
+          <div className="input-group">
+            <label className="input-label">Roll Number (optional)</label>
+            <input id="save-roll" className="input" placeholder="e.g., 23BCS0001" value={rollNumber} onChange={e => setRollNumber(e.target.value)} />
+          </div>
+        </div>
+        <div className="modal-actions">
+          <button className="btn btn-secondary flex-1" style={{ justifyContent: 'center' }} onClick={onClose}>Cancel</button>
+          <button className="btn btn-primary flex-1" style={{ justifyContent: 'center' }} onClick={onSave}>Save</button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// ============================================================
+// TOAST
+// ============================================================
+function Toast({ message, type, onDismiss }) {
+  useEffect(() => { const t = setTimeout(onDismiss, 3000); return () => clearTimeout(t) }, [onDismiss])
+  return <div className={`toast toast-${type}`}>{type === 'success' ? '✅' : '❌'} {message}</div>
+}
+
+// ============================================================
+// BRANCH + SEMESTER SELECTOR
+// ============================================================
+function BranchSemSelector({ curriculum, onSelect }) {
+  const [branch, setBranch] = useState(null)
+
+  if (!branch) {
+    return (
+      <div className="page-enter">
+        <div className="section-header">
+          <h1 className="section-title">Select Your Branch</h1>
+          <p className="section-subtitle">Choose your B.Tech branch — courses will be pre-loaded from the AU 2025-26 curriculum</p>
+        </div>
+        <div className="branch-grid">
+          {Object.entries(BRANCH_INFO).map(([key, info]) => (
+            <div key={key} className="branch-card" id={`branch-${key}`} onClick={() => setBranch(key)}>
+              <span className="branch-emoji">{info.emoji}</span>
+              <div className="branch-name">{info.name}</div>
+              <div className="branch-code">{info.short}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    )
+  }
+
+  const branchData = curriculum[branch]
+  const semesters = branchData ? Object.keys(branchData.semesters) : []
+
+  return (
+    <div className="page-enter">
+      <button className="btn btn-ghost" style={{ marginBottom: '24px', fontSize: '13px' }} onClick={() => setBranch(null)}>
+        ← Back
+      </button>
+      <div className="section-header">
+        <h1 className="section-title">{BRANCH_INFO[branch]?.emoji} {BRANCH_INFO[branch]?.name}</h1>
+        <p className="section-subtitle">Select your semester</p>
+      </div>
+      <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
+        {semesters.map(sem => (
+          <button
+            key={sem}
+            id={`sem-select-${sem}`}
+            className="btn btn-secondary"
+            style={{ padding: '16px 32px', fontSize: '16px', fontWeight: '700', borderRadius: '12px' }}
+            onClick={() => onSelect(branch, sem)}
+          >
+            {sem}
+          </button>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+// ============================================================
+// MAIN CALCULATOR PAGE
+// ============================================================
+export default function Calculator() {
+  const [searchParams] = useSearchParams()
+  const { id: recordId } = useParams()
+  const navigate = useNavigate()
+
+  const [curriculum, setCurriculum] = useState(null)
+  const [selectedBranch, setSelectedBranch] = useState(null)
+  const [selectedSem, setSelectedSem] = useState(null)
+  const [courses, setCourses] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [saving, setSaving] = useState(false)
+  const [savedId, setSavedId] = useState(recordId || null)
+  const [showModal, setShowModal] = useState(false)
+  const [studentName, setStudentName] = useState('Student')
+  const [rollNumber, setRollNumber] = useState('')
+  const [toast, setToast] = useState(null)
+
+  useEffect(() => {
+    getCurriculum()
+      .then(res => { setCurriculum(res.data.curriculum); setLoading(false) })
+      .catch(() => { setLoading(false); showToast('Server offline — grades won\'t save', 'error') })
+  }, [])
+
+  const showToast = (msg, type = 'success') => setToast({ message: msg, type })
+
+  const handleSelect = useCallback((branch, sem) => {
+    if (!curriculum) return
+    const rawCourses = curriculum[branch]?.semesters[sem] || []
+    setCourses(rawCourses.map(initCourse))
+    setSelectedBranch(branch)
+    setSelectedSem(sem)
+  }, [curriculum])
+
+  const handleCourseChange = useCallback((idx, updatedCourse) => {
+    setCourses(prev => {
+      const next = [...prev]
+      next[idx] = updatedCourse
+      return next
+    })
+  }, [])
+
+  const handleSave = async () => {
+    const gradeableCourses = courses.map(toCourseForSGPA)
+    const sgpa = calculateSGPA(gradeableCourses)
+    const cgpa = calculateCGPA([{ courses: gradeableCourses }])
+
+    const payload = {
+      studentName, rollNumber,
+      branch: selectedBranch,
+      branchName: BRANCH_INFO[selectedBranch]?.name || selectedBranch,
+      semesters: [{
+        semesterName: selectedSem,
+        courses: gradeableCourses,
+        sgpa,
+        totalCredits: courses.reduce((a, c) => a + c.credits, 0),
+        earnedCredits: gradeableCourses.reduce((a, c) => {
+          if (c.isTheoryPractical) {
+            const tc = c.theoryCredits ?? 0
+            const pc = c.practicalCredits ?? 0
+            return a
+              + (c.theoryGrade && c.theoryGrade !== 'F' && c.theoryGrade !== 'Ab' ? tc : 0)
+              + (c.practicalGrade && c.practicalGrade !== 'F' && c.practicalGrade !== 'Ab' ? pc : 0)
+          }
+          return a + (c.grade && c.grade !== 'F' && c.grade !== 'Ab' ? c.credits : 0)
+        }, 0),
+      }],
+      cgpa,
+    }
+
+    setSaving(true)
+    try {
+      if (savedId) {
+        await updateRecord(savedId, payload)
+        showToast('Record updated!', 'success')
+      } else {
+        const res = await saveRecord(payload)
+        setSavedId(res.data._id)
+        showToast('Record saved!', 'success')
+        navigate(`/calculator/${res.data._id}`, { replace: true })
+      }
+      setShowModal(false)
+    } catch { showToast('Could not save — is the server running?', 'error') }
+    finally { setSaving(false) }
+  }
+
+  if (loading) return (
+    <div className="container" style={{ paddingTop: '80px', textAlign: 'center' }}>
+      <div style={{ fontSize: '48px', marginBottom: '16px', animation: 'pulse 1.5s infinite' }}>⚡</div>
+      <div style={{ color: 'var(--text-secondary)' }}>Loading curriculum...</div>
+    </div>
+  )
+
+  // Not yet selected branch/sem
+  if (!selectedBranch || !selectedSem) {
+    return (
+      <div className="container" style={{ paddingTop: '40px', paddingBottom: '60px' }}>
+        <BranchSemSelector curriculum={curriculum || {}} onSelect={handleSelect} />
+      </div>
+    )
+  }
+
+  const branchInfo = BRANCH_INFO[selectedBranch]
+
+  return (
+    <div className="container page-enter" style={{ paddingTop: '32px', paddingBottom: '80px' }}>
+      {/* Page header */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '28px', flexWrap: 'wrap' }}>
+        <button className="btn btn-ghost" style={{ fontSize: '13px' }} onClick={() => { setSelectedBranch(null); setSelectedSem(null) }}>
+          ← Back
+        </button>
+        <div>
+          <h1 style={{ fontSize: '20px', fontWeight: '800', letterSpacing: '-0.3px' }}>
+            {branchInfo?.emoji} {branchInfo?.name} — {selectedSem}
+          </h1>
+          <div style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>
+            Anurag University • AY 2025-26 • {courses.length} subjects • Enter CIE marks + Expected SEE to predict grades
+          </div>
+        </div>
+      </div>
+
+      {/* Mark entry guide */}
+      <div style={{ padding: '12px 16px', borderRadius: '10px', background: 'rgba(250,200,0,0.04)', border: '1px solid var(--accent-border)', fontSize: '12px', color: 'var(--text-secondary)', marginBottom: '24px', display: 'flex', gap: '24px', flexWrap: 'wrap' }}>
+        <span>📝 <strong style={{ color: 'var(--accent)' }}>CIE</strong> = Mid-1 (/20) + Mid-2 (/20) + Assignment (/10) = max 50</span>
+        <span>📄 <strong style={{ color: 'var(--accent)' }}>SEE</strong> = End exam out of 50</span>
+        <span>🎯 <strong style={{ color: 'var(--accent)' }}>Total</strong> = CIE + SEE out of 100 → grade determined</span>
+      </div>
+
+      <div className="calculator-layout">
+        {/* Left: course cards */}
+        <div>
+          {courses.map((course, idx) => (
+            <div key={course.code + idx} style={{ animation: `fadeInUp 0.3s ease ${idx * 0.04}s both` }}>
+              <CourseCard
+                course={course}
+                onChange={(updated) => handleCourseChange(idx, updated)}
+              />
+            </div>
+          ))}
+
+          <div style={{ padding: '14px 18px', borderRadius: '10px', background: 'rgba(250,200,0,0.03)', border: '1px solid rgba(250,200,0,0.1)', fontSize: '12px', color: 'var(--text-secondary)', marginTop: '8px' }}>
+            <strong style={{ color: 'var(--accent)' }}>📌 Note:</strong> 2nd, 3rd & 4th year structures will be released by Anurag University in due course. Year 1 data is loaded from the official AU B.Tech Curriculum PDF (AY 2025-26).
+          </div>
+        </div>
+
+        {/* Right: GPA summary */}
+        <div>
+          <GPASummary
+            courses={courses}
+            onSave={() => setShowModal(true)}
+            saving={saving}
+            savedId={savedId}
+          />
+        </div>
+      </div>
+
+      <SaveModal
+        show={showModal} onClose={() => setShowModal(false)} onSave={handleSave}
+        studentName={studentName} setStudentName={setStudentName}
+        rollNumber={rollNumber} setRollNumber={setRollNumber}
+      />
+
+      {toast && <Toast message={toast.message} type={toast.type} onDismiss={() => setToast(null)} />}
+    </div>
+  )
+}
