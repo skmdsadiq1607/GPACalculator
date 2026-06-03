@@ -17,7 +17,7 @@ export default function Home() {
     <div className="container page-enter">
       {/* Hero */}
       <div className="hero" style={{ padding: '100px 24px 80px', textAlign: 'center', position: 'relative' }}>
-        <div style={{ position: 'absolute', top: '-100px', left: '50%', transform: 'translateX(-50%)', width: '600px', height: '600px', background: 'radial-gradient(circle, rgba(144, 97, 249, 0.15) 0%, rgba(0,0,0,0) 70%)', pointerEvents: 'none', zIndex: -1 }}></div>
+        <div style={{ position: 'absolute', top: '-100px', left: '50%', transform: 'translateX(-50%)', width: '600px', height: '600px', background: 'radial-gradient(circle, rgba(253, 230, 138, 0.1) 0%, rgba(0,0,0,0) 70%)', pointerEvents: 'none', zIndex: -1 }}></div>
         <div className="hero-badge" style={{ display: 'inline-block', marginBottom: '24px', padding: '6px 16px', borderRadius: '30px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', fontSize: '13px', fontWeight: '600', letterSpacing: '0.5px', color: 'var(--accent)' }}>
           Built for Anuragians by IgniteXT
         </div>
@@ -32,7 +32,7 @@ export default function Home() {
         <div style={{ display: 'flex', gap: '16px', justifyContent: 'center', flexWrap: 'wrap' }}>
           {user ? (
             <>
-              <button className="btn btn-primary" style={{ padding: '16px 32px', fontSize: '16px', fontWeight: '700', borderRadius: '12px', boxShadow: '0 8px 30px rgba(144, 97, 249, 0.4)' }} onClick={() => navigate('/calculator')}>
+              <button className="btn btn-primary" style={{ padding: '16px 32px', fontSize: '16px', fontWeight: '700', borderRadius: '12px', boxShadow: '0 8px 30px rgba(253, 230, 138, 0.3)' }} onClick={() => navigate('/calculator')}>
                 Open Calculator →
               </button>
               <button className="btn btn-secondary" style={{ padding: '16px 32px', fontSize: '16px', fontWeight: '700', borderRadius: '12px' }} onClick={() => navigate('/records')}>
@@ -79,7 +79,7 @@ export default function Home() {
               { num: '3', title: 'Save & Download', desc: 'Hit save to permanently store your record in the cloud, and instantly download a professional PDF scorecard.' }
             ].map((step, i) => (
               <div key={i} style={{ display: 'flex', gap: '20px', alignItems: 'flex-start' }}>
-                <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'var(--accent)', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '800', fontSize: '18px', flexShrink: 0, boxShadow: '0 4px 12px rgba(144, 97, 249, 0.3)' }}>
+                <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'var(--accent)', color: '#000', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '800', fontSize: '18px', flexShrink: 0, boxShadow: '0 4px 12px rgba(253, 230, 138, 0.3)' }}>
                   {step.num}
                 </div>
                 <div>
