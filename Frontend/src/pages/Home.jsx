@@ -22,8 +22,8 @@ export default function Home() {
           ✨ The Ultimate AU Academic Companion
         </div>
         <h1 className="hero-title" style={{ fontSize: 'clamp(40px, 6vw, 64px)', lineHeight: '1.1', fontWeight: '800', letterSpacing: '-1.5px', marginBottom: '24px' }}>
-          Master Your Grades<br/>
-          <span className="gradient-text">With Precision.</span>
+          Curious About Your Grades?<br/>
+          <span className="gradient-text">Calculate Them Now.</span>
         </h1>
         <p className="hero-subtitle" style={{ maxWidth: '650px', margin: '0 auto 40px', fontSize: '18px', color: 'var(--text-secondary)', lineHeight: '1.6' }}>
           Stop guessing and start planning. Track your CIE marks, predict your SEE requirements, and automatically calculate your SGPA based on the official Anurag University curriculum.
