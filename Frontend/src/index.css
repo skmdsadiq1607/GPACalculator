@@ -831,10 +831,10 @@ body {
   .navbar-inner { padding: 0 8px; }
 }
 
-/* ===== PDF EXPORT STYLES ===== */
+/* ===== PDF EXPORT STYLES (Professional Light Theme) ===== */
 .pdf-export-mode {
-  background: var(--bg-primary) !important;
-  color: var(--text-primary) !important;
+  background: #ffffff !important;
+  color: #111111 !important;
   padding: 40px !important;
 }
 
@@ -842,17 +842,29 @@ body {
   display: none !important;
 }
 
+/* Base text color overrides for light PDF */
+.pdf-export-mode h1, .pdf-export-mode h2, .pdf-export-mode h3, .pdf-export-mode p, .pdf-export-mode span, .pdf-export-mode div {
+  color: #111111;
+}
+
 .pdf-header-brand {
   display: none;
   align-items: center;
   justify-content: space-between;
   margin-bottom: 32px;
-  border-bottom: 1px solid var(--border);
+  border-bottom: 2px solid var(--accent);
   padding-bottom: 16px;
 }
 
 .pdf-export-mode .pdf-header-brand {
   display: flex !important;
+}
+
+.pdf-export-mode .pdf-header-brand span {
+  color: #d97706 !important; /* Dark gold for visibility on white */
+}
+.pdf-export-mode .pdf-header-brand .subtitle {
+  color: #666666 !important;
 }
 
 .pdf-export-mode .calculator-layout {
@@ -863,11 +875,51 @@ body {
 .pdf-export-mode .gpa-summary-panel {
   position: static;
   box-shadow: none;
-  border: 1px solid var(--border);
+  background: #fafafa !important;
+  border: 2px solid var(--accent) !important;
 }
 
 .pdf-export-mode .course-card {
   box-shadow: none;
-  border: 1px solid var(--border);
+  background: #ffffff !important;
+  border: 1px solid #e5e5e5 !important;
   break-inside: avoid;
+}
+
+.pdf-export-mode .course-category-badge {
+  color: #666 !important;
+  border-color: #ddd !important;
+  background: #f5f5f5 !important;
+}
+
+.pdf-export-mode .course-code {
+  background: rgba(253, 230, 138, 0.3) !important;
+  color: #b45309 !important; /* Darker yellow/gold for readability */
+  border: 1px solid rgba(253, 230, 138, 0.6) !important;
+}
+
+.pdf-export-mode .cie-total {
+  background: #f9f9f9 !important;
+  border-color: #eee !important;
+}
+
+.pdf-export-mode .see-needed-row {
+  background: #f9f9f9 !important;
+  border-color: #eee !important;
+}
+
+.pdf-export-mode .see-input {
+  background: #fff !important;
+  border-color: #ccc !important;
+  color: #000 !important;
+}
+
+.pdf-export-mode .split-section {
+  background: #fcfcfc !important;
+  border-color: #eee !important;
+}
+.pdf-export-mode .split-section-header {
+  background: #f5f5f5 !important;
+  border-color: #eee !important;
+  color: #333 !important;
 }
