@@ -774,10 +774,10 @@ export default function Calculator() {
           </div>
         </div>
 
-      <div style={{ padding: '12px 16px', borderRadius: '10px', background: 'rgba(250,200,0,0.04)', border: '1px solid var(--accent-border)', fontSize: '12px', color: 'var(--text-secondary)', marginBottom: '24px', display: 'flex', gap: '24px', flexWrap: 'wrap' }}>
-        <span>📝 <strong style={{ color: 'var(--accent)' }}>CIE</strong> = Mid-1 (/20) + Mid-2 (/20) + Assignment (/10) = max 50</span>
-        <span>📄 <strong style={{ color: 'var(--accent)' }}>SEE</strong> = End exam out of 50</span>
-        <span>🎯 <strong style={{ color: 'var(--accent)' }}>Total</strong> = CIE + SEE out of 100 → grade determined</span>
+      <div style={{ padding: '16px', borderRadius: '10px', background: 'rgba(250,200,0,0.04)', border: '1px solid var(--accent-border)', fontSize: '12px', color: 'var(--text-secondary)', marginBottom: '24px', display: 'flex', flexDirection: 'column', gap: '12px', overflow: 'hidden' }}>
+        <span style={{ wordWrap: 'break-word', whiteSpace: 'normal' }}>📝 <strong style={{ color: 'var(--accent)' }}>CIE</strong> = Mid-1 (/20) + Mid-2 (/20) + Assignment (/10) = max 50</span>
+        <span style={{ wordWrap: 'break-word', whiteSpace: 'normal' }}>📄 <strong style={{ color: 'var(--accent)' }}>SEE</strong> = End exam out of 50</span>
+        <span style={{ wordWrap: 'break-word', whiteSpace: 'normal' }}>🎯 <strong style={{ color: 'var(--accent)' }}>Total</strong> = CIE + SEE out of 100 → grade determined</span>
       </div>
 
       <div className="calculator-layout">

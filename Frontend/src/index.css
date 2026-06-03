@@ -405,9 +405,10 @@ body {
   font-family: var(--font-main);
   font-size: 15px;
   font-weight: 600;
-  text-align: center;
   transition: all 0.2s ease;
   outline: none;
+  box-sizing: border-box;
+  max-width: 100%;
 }
 .cie-input:focus { background: rgba(255,255,255,0.06); border-color: var(--accent-border); box-shadow: 0 0 0 3px var(--accent-dim); }
 .cie-input::-webkit-inner-spin-button, .cie-input::-webkit-outer-spin-button { opacity: 1; }
@@ -423,6 +424,8 @@ body {
   background: rgba(255,255,255,0.02);
   border-radius: var(--radius-sm);
   border: 1px solid var(--border);
+  box-sizing: border-box;
+  max-width: 100%;
 }
 .cie-total-value {
   font-size: 24px;
@@ -508,9 +511,10 @@ body {
   font-family: var(--font-main);
   font-size: 15px;
   font-weight: 600;
-  text-align: center;
   transition: all 0.2s ease;
   outline: none;
+  box-sizing: border-box;
+  max-width: 100%;
 }
 .see-input:focus { background: rgba(255,255,255,0.06); border-color: var(--accent-border); box-shadow: 0 0 0 3px var(--accent-dim); }
 .see-input::-webkit-inner-spin-button, .see-input::-webkit-outer-spin-button { opacity: 1; }
