@@ -73,6 +73,7 @@ function initCourse(c) {
 
 // Compute CIE total from a mark set
 function cieTot(marks, mode) {
+  if (!marks) return 0;
   if (mode === 'practical') {
     return (Number(marks.dayToDay) || 0) + (Number(marks.skillTest) || 0)
   }
@@ -84,6 +85,7 @@ function cieTot(marks, mode) {
 
 // Get predicted grade from a mark set
 function getGrade(marks, mode) {
+  if (!marks) return 'F';
   const cie = cieTot(marks, mode)
   return predictGrade(cie, marks.expectedSEE)
 }
@@ -105,7 +107,7 @@ function toCourseForSGPA(course) {
 // ============================================================
 // CIE INPUT BLOCK (shared by normal & split courses)
 // ============================================================
-function CIEBlock({ marks, onChange, prefix, mode = 'theory' }) {
+function CIEBlock({ marks = {}, onChange, prefix, mode = 'theory' }) {
   const cie = cieTot(marks, mode)
   const grade = predictGrade(cie, marks.expectedSEE)
 
@@ -691,14 +693,16 @@ export default function Calculator() {
       if (savedId) {
         await updateRecord(savedId, payload)
         showToast('Record updated!', 'success')
+        setShowModal(false)
+        await generatePDF()
       } else {
         const res = await saveRecord(payload)
+        setShowModal(false)
+        await generatePDF()
         setSavedId(res.data._id)
         showToast('Record saved!', 'success')
         navigate(`/calculator/${res.data._id}`, { replace: true })
       }
-      setShowModal(false)
-      await generatePDF()
     } catch { showToast('Could not save — is the server running?', 'error') }
     finally { setSaving(false) }
   }
