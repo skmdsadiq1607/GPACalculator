@@ -894,6 +894,6 @@ body {
 @media (max-width: 500px) {
   .course-card { padding: 16px; border-radius: 12px; }
   .cie-row { gap: 6px; }
-  .cie-input { padding: 8px; font-size: 14px; }
-  .cie-divider { margin-top: 18px; font-size: 14px; }
+  .cie-input, .see-input { padding: 8px; font-size: 16px; }
+  .cie-divider { margin-top: 18px; font-size: 16px; }
 }
