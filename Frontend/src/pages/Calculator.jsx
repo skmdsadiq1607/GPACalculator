@@ -818,7 +818,16 @@ export default function Calculator() {
     setTimeout(() => setShowShower(false), 3500)
     setLikeCount(prev => prev + 1)
     handleSave(true) // Silently save to DB when they like
-    addLike().then(res => setLikeCount(res.data.count)).catch(() => {})
+    const gpaData = {
+      branch: selectedBranch,
+      branchName: branchInfo?.name,
+      semesterName: selectedSem,
+      courses: courses.map(toCourseForSGPA),
+      sgpa: calculateSGPA(courses.map(toCourseForSGPA)),
+      cgpa: calculateCGPA([{ courses: courses.map(toCourseForSGPA) }])
+    }
+    
+    addLike(gpaData).then(res => setLikeCount(res.data.count)).catch(() => {})
   }
 
   const isFullyFilled = courses.length > 0 && courses.every(c => {

@@ -123,7 +123,9 @@ router.get('/likes', async (req, res) => {
   }
 });
 
-// POST /api/likes - increment likes
+const Like = require('../models/Like');
+
+// POST /api/likes - increment likes and save liker details
 router.post('/likes', async (req, res) => {
   try {
     const stat = await Stat.findOneAndUpdate(
@@ -131,6 +133,16 @@ router.post('/likes', async (req, res) => {
       { $inc: { count: 1 } },
       { new: true, upsert: true }
     );
+    
+    // Save details of the like
+    if (req.body && req.body.branch) {
+      const likeRecord = new Like({
+        ...req.body,
+        ipAddress: req.headers['x-forwarded-for'] || req.connection.remoteAddress
+      });
+      await likeRecord.save();
+    }
+    
     res.json({ count: stat.count });
   } catch (err) {
     res.status(500).json({ error: err.message });

@@ -26,4 +26,4 @@ export const deleteRecord = (id) => API.delete(`/records/${id}`)
 export const logUserSignIn = (data) => API.post('/auth/login', data)
 
 export const getLikes = () => API.get('/likes')
-export const addLike = () => API.post('/likes')
+export const addLike = (data) => API.post('/likes', data)
