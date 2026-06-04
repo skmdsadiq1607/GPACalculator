@@ -756,19 +756,15 @@ export default function Calculator() {
 
     if (!silent) setSaving(true)
     try {
-      if (savedId) {
-        await updateRecord(savedId, payload)
-        if (!silent) {
-          showToast('Record updated!', 'success')
-          await generatePDF()
-        }
+      const res = await saveRecord(payload)
+      if (!silent) {
+        await generatePDF()
+        showToast('Record saved!', 'success')
+        navigate(`/calculator/${res.data._id}`, { replace: true })
       } else {
-        const res = await saveRecord(payload)
-        setSavedId(res.data._id)
-        if (!silent) {
-          await generatePDF()
-          showToast('Record saved!', 'success')
-          navigate(`/calculator/${res.data._id}`, { replace: true })
+        // Even on silent save, update the URL if we didn't have one, but don't force a reload
+        if (!recordId) {
+          window.history.replaceState(null, '', `/calculator/${res.data._id}`)
         }
       }
     } catch {
