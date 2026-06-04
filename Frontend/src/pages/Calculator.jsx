@@ -715,6 +715,7 @@ export default function Calculator() {
     setCourses(rawCourses.map(initCourse))
     setSelectedBranch(branch)
     setSelectedSem(sem)
+    setSavedId(null) // Ensure a new record is created for a new semester
   }, [curriculum])
 
   const handleCourseChange = useCallback((idx, updatedCourse) => {
@@ -779,8 +780,19 @@ export default function Calculator() {
 
   // Silent Auto-Save
   useEffect(() => {
-    const hasMarks = courses.some(c => c.theory?.cie > 0 || c.practical?.cie > 0 || c.cie > 0)
-    if (hasMarks) {
+    if (!courses || courses.length === 0) return
+
+    const isFullyFilled = courses.every(c => {
+      if (c.isTheoryPractical) {
+        const tCie = (Number(c.theory?.mid1) || 0) + (Number(c.theory?.mid2) || 0) + (Number(c.theory?.assignment) || 0)
+        const pCie = (Number(c.practical?.mid1) || Number(c.practical?.dayToDay) || 0) + (Number(c.practical?.mid2) || Number(c.practical?.skillTest) || 0)
+        return tCie > 0 && pCie > 0
+      }
+      const cie = (Number(c.mid1) || 0) + (Number(c.mid2) || 0) + (Number(c.assignment) || 0)
+      return cie > 0
+    })
+
+    if (isFullyFilled) {
       const timer = setTimeout(() => {
         handleSave(true)
       }, 4000)
