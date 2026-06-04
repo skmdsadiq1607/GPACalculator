@@ -96,38 +96,61 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Grading Reference */}
-      <div style={{ marginBottom: '80px', opacity: user ? 1 : 0.4, transition: 'opacity 0.3s' }}>
-        <div className="section-header" style={{ textAlign: 'center' }}>
-          <h2 className="section-title" style={{ fontFamily: 'var(--font-main)', fontWeight: 800 }}>Evaluation Matrix</h2>
-          <p className="section-subtitle">Institutional 10-point absolute grading framework.</p>
+      {/* About GPA Calculation */}
+      <div style={{ marginBottom: '80px', padding: '0 20px' }}>
+        <div style={{ maxWidth: '800px', margin: '0 auto', background: 'linear-gradient(145deg, rgba(255,255,255,0.03) 0%, rgba(0,0,0,0.2) 100%)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '24px', padding: '48px 32px' }}>
+          <div style={{ textAlign: 'center', marginBottom: '32px' }}>
+            <h2 style={{ fontSize: '28px', fontWeight: '800', marginBottom: '8px' }}>How is SGPA Calculated?</h2>
+            <p style={{ color: 'var(--text-secondary)' }}>The math behind your academic performance.</p>
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '24px', color: 'var(--text-secondary)', fontSize: '15px', lineHeight: '1.8' }}>
+            <p>
+              Your Semester Grade Point Average (SGPA) is the weighted average of the grade points you earn in all registered courses during a semester. 
+            </p>
+            <div style={{ padding: '24px', background: 'rgba(250, 200, 0, 0.05)', borderRadius: '16px', border: '1px solid rgba(250, 200, 0, 0.2)', textAlign: 'center' }}>
+              <span style={{ fontFamily: 'monospace', fontSize: '18px', color: 'var(--accent)', fontWeight: 'bold' }}>
+                SGPA = Σ (Course Credits × Grade Points) / Σ (Course Credits)
+              </span>
+            </div>
+            <p>
+              <strong>Grade Points:</strong> Outstanding (O) = 10, Excellent (A+) = 9, Very Good (A) = 8, Good (B+) = 7, Above Average (B) = 6, Average (C) = 5, Pass (P) = 4, Fail (F) = 0.
+            </p>
+            <p>
+              Our calculator uses the official Anurag University curriculum to automatically map your subjects to their exact credit values, ensuring your predicted SGPA is 100% accurate.
+            </p>
+          </div>
         </div>
-        <div style={{ maxWidth: '800px', margin: '0 auto' }}>
-          <div className="grade-ref-grid">
-            {[
-              { g: 'O',  pts: 10, label: 'Outstanding', color: '#22c55e' },
-              { g: 'A+', pts: 9,  label: 'Excellent',   color: 'var(--accent)' },
-              { g: 'A',  pts: 8,  label: 'Very Good',   color: '#FDE68A' },
-              { g: 'B+', pts: 7,  label: 'Good',        color: '#f97316' },
-              { g: 'B',  pts: 6,  label: 'Above Avg',   color: '#ca8a04' },
-              { g: 'C',  pts: 5,  label: 'Average',     color: '#71717a' },
-              { g: 'P',  pts: 4,  label: 'Pass',        color: '#a1a1aa' },
-              { g: 'F',  pts: 0,  label: 'Fail',        color: '#ef4444' },
-            ].map(item => (
-              <div key={item.g} className="grade-ref-item" style={{ 
-                border: `1px solid ${item.color}33`, 
-                background: `linear-gradient(145deg, rgba(255,255,255,0.03) 0%, rgba(0,0,0,0.2) 100%)`,
-                boxShadow: `0 8px 24px ${item.color}11`,
-                borderRadius: '12px',
-                padding: '24px 16px',
-                transition: 'all 0.3s ease'
-              }}>
-                <div className="grade-ref-letter" style={{ color: item.color, fontSize: '28px', fontFamily: 'var(--font-main)', fontWeight: 900, textShadow: `0 0 16px ${item.color}44` }}>{item.g}</div>
-                <div className="grade-ref-points" style={{ color: 'var(--text-primary)', fontWeight: '700', fontSize: '14px', marginTop: '8px' }}>
-                  {item.pts} pts
-                </div>
-              </div>
-            ))}
+      </div>
+
+      {/* IgniteXT Community */}
+      <div style={{ marginBottom: '60px', padding: '0 20px' }}>
+        <div style={{ maxWidth: '800px', margin: '0 auto', background: 'rgba(250, 200, 0, 0.08)', border: '1px solid rgba(250, 200, 0, 0.2)', borderRadius: '24px', padding: '48px 32px', textAlign: 'center' }}>
+          <h2 style={{ fontSize: '32px', fontWeight: '800', marginBottom: '16px', color: 'var(--text-primary)' }}>Join the IgniteXT Community 🚀</h2>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '16px', marginBottom: '32px', maxWidth: '500px', margin: '0 auto 32px' }}>
+            Connect with fellow Anuragians, get instant updates, collaborate on cool projects, and grow together.
+          </p>
+          <div style={{ display: 'flex', gap: '16px', justifyContent: 'center', flexWrap: 'wrap' }}>
+            <a 
+              href="https://chat.whatsapp.com/GKMymI4MPt7Cnkfs2rH1HF" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="btn"
+              style={{ background: '#25D366', color: '#fff', padding: '14px 28px', borderRadius: '12px', fontWeight: '700', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '8px', boxShadow: '0 8px 24px rgba(37, 211, 102, 0.2)' }}
+            >
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.888-.788-1.489-1.761-1.663-2.06-.173-.299-.018-.461.13-.611.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+              </svg>
+              Join WhatsApp Group
+            </a>
+            <a 
+              href="https://ignitext2026.vercel.app/" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="btn btn-secondary"
+              style={{ padding: '14px 28px', borderRadius: '12px', fontWeight: '700', textDecoration: 'none', border: '1px solid rgba(255,255,255,0.1)' }}
+            >
+              Visit IgniteXT Website 🌐
+            </a>
           </div>
         </div>
       </div>
