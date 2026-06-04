@@ -586,57 +586,7 @@ function GPASummary({ courses, onSave, saving, savedId, isFullyFilled, likeCount
         </button>
       </div>
 
-      {isFullyFilled && (
-        <div className="page-enter hide-on-print" style={{ 
-          margin: '10px 20px 20px', 
-          display: 'flex', 
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          fontFamily: "'Dancing Script', cursive",
-          background: 'transparent'
-        }}>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
-            <div style={{ fontSize: '26px', color: '#fff', lineHeight: '1.2' }}>Find this tool helpful?</div>
-            <div style={{ fontSize: '26px', color: '#fff', lineHeight: '1.2' }}>Click the heart to show</div>
-            <div style={{ fontSize: '26px', color: '#f472b6', lineHeight: '1.2', display: 'flex', alignItems: 'center', gap: '8px' }}>
-              your support! ♡
-            </div>
-          </div>
-          
-          <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
-            {!hasLiked && (
-              <svg width="70" height="60" viewBox="0 0 100 60" fill="none" style={{ position: 'absolute', right: '65px', top: '15px' }}>
-                {/* Custom drawn double-loop spiral arrow */}
-                <path d="M 5 50 C 25 70, 40 30, 25 25 C 10 20, 5 45, 20 55 C 45 70, 70 30, 55 25 C 40 20, 35 45, 50 55 C 70 65, 85 45, 95 30" stroke="#f472b6" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M 85 28 L 95 30 L 92 40" stroke="#f472b6" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-            )}
-            
-            <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
-              {showShower && <HeartShower />}
-              <button 
-                onClick={onLike}
-                disabled={hasLiked}
-                style={{
-                  background: '#fff',
-                  border: 'none',
-                  borderRadius: '50%',
-                  width: '56px', height: '56px',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  cursor: hasLiked ? 'default' : 'pointer',
-                  boxShadow: hasLiked ? '0 0 25px rgba(244,114,182,0.8)' : '0 0 15px rgba(244,114,182,0.4)',
-                  transition: 'all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)',
-                  transform: hasLiked ? 'scale(1.1)' : 'scale(1)',
-                }}
-              >
-                <svg width="26" height="26" viewBox="0 0 24 24" fill="#f472b6" stroke="#f472b6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ transform: 'translateY(1px)' }}>
-                  <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-                </svg>
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* The Like banner has been moved to the left column */}
     </div>
   )
 }
@@ -976,6 +926,57 @@ export default function Calculator() {
           <div style={{ padding: '16px 20px', borderRadius: '8px', background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)', fontSize: '13px', color: 'var(--text-secondary)', marginTop: '16px', lineHeight: '1.6' }}>
             <strong style={{ color: 'var(--text-primary)' }}>Institution Notice:</strong> Year II, III, and IV curriculum structures will be integrated upon official release by Anurag University. Current Year I matrices are strictly calibrated against the official AY 2025-26 B.Tech Curriculum Directive.
           </div>
+
+          {isFullyFilled && (
+            <div className="page-enter hide-on-print" style={{ 
+              marginTop: '60px',
+              marginBottom: '60px',
+              display: 'flex', 
+              justifyContent: 'center',
+              alignItems: 'center',
+              fontFamily: "'Dancing Script', cursive",
+            }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', marginRight: '110px' }}>
+                <div style={{ fontSize: '32px', color: '#fff', lineHeight: '1.2' }}>Find this tool helpful?</div>
+                <div style={{ fontSize: '32px', color: '#fff', lineHeight: '1.2' }}>Click the heart to show</div>
+                <div style={{ fontSize: '32px', color: '#f472b6', lineHeight: '1.2', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  your support! ♡
+                </div>
+              </div>
+              
+              <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+                {!hasLiked && (
+                  <svg width="100" height="80" viewBox="0 0 100 80" fill="none" style={{ position: 'absolute', right: '85px', top: '10px' }}>
+                    <path d="M 5 60 C 30 80, 50 40, 30 35 C 10 30, 5 60, 25 70 C 55 85, 80 40, 60 35 C 40 30, 35 60, 55 70 C 80 85, 95 60, 95 40" stroke="#f472b6" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+                    <path d="M 85 45 L 95 40 L 90 50" stroke="#f472b6" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                )}
+                
+                <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                  {showShower && <HeartShower />}
+                  <button 
+                    onClick={onLike}
+                    disabled={hasLiked}
+                    style={{
+                      background: '#fff',
+                      border: 'none',
+                      borderRadius: '50%',
+                      width: '76px', height: '76px',
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      cursor: hasLiked ? 'default' : 'pointer',
+                      boxShadow: hasLiked ? '0 0 35px rgba(244,114,182,0.8)' : '0 0 25px rgba(244,114,182,0.3)',
+                      transition: 'all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)',
+                      transform: hasLiked ? 'scale(1.1)' : 'scale(1)',
+                    }}
+                  >
+                    <svg viewBox="0 0 32 29.6" width="34" height="34" style={{ transform: 'translateY(2px)' }}>
+                      <path d="M23.6,0c-3.4,0-6.3,2.7-7.6,5.6C14.7,2.7,11.8,0,8.4,0C3.8,0,0,3.8,0,8.4c0,9.4,9.5,11.9,16,21.2 c6.1-9.3,16-12.1,16-21.2C32,3.8,28.2,0,23.6,0z" fill="#f472b6"/>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Right: GPA summary */}
