@@ -621,8 +621,8 @@ function LikeBanner({ hasLiked, onLike, showShower, likeCount, scale = 1 }) {
       
       {!hasLiked && (
         <svg width="70" height="56" viewBox="0 0 100 80" fill="none" style={{ margin: '0 15px', transform: 'translateY(10px)' }}>
-          <path d="M 5 75 C 40 75, 70 55, 70 30 C 70 5, 40 5, 40 30 C 40 60, 60 65, 90 35" stroke="#f472b6" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
-          <path d="M 78 35 L 90 35 L 90 47" stroke="#f472b6" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+          <path d="M 5 60 C 30 70, 70 55, 65 25 C 60 -5, 35 5, 40 35 C 45 65, 60 40, 90 30" stroke="#f472b6" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+          <path d="M 75 25 L 90 30 L 80 42" stroke="#f472b6" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
         </svg>
       )}
       
