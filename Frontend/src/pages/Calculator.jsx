@@ -964,7 +964,7 @@ export default function Calculator() {
                 <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                   {showShower && <HeartShower />}
                   <button 
-                    onClick={onLike}
+                    onClick={handleLike}
                     disabled={hasLiked}
                     style={{
                       background: '#fff',
