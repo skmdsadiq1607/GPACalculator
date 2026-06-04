@@ -201,6 +201,23 @@ const curriculum = {
         { code: "EMA1204", title: "Data Structures",                             credits: 4, category: "Theoretical & Practical (ES)", isTheoryPractical: true, defaultTheoryCredits: 3 },
         { code: "EVA1221", title: "Joy of Engineering - II",                     credits: 3, category: "Exploratory (ES)" },
         { code: "EMA1207", title: "Linux Programming",                           credits: 2, category: "Practical (PC)" },
+      ],
+      "Sem 3": [
+        { code: "IT301", title: "Discrete Mathematics", credits: 3, category: "Theoretical" },
+        { code: "IT302", title: "Computer Organization", credits: 3, category: "Theoretical" },
+        { code: "IT303", title: "Data Structures and Algorithms", credits: 5, category: "Theoretical & Practical", isTheoryPractical: true, defaultTheoryCredits: 3 },
+        { code: "IT304", title: "Object Oriented Programming through Java", credits: 5, category: "Theoretical & Practical", isTheoryPractical: true, defaultTheoryCredits: 3 },
+        { code: "IT305", title: "Integrated Project - I", credits: 1, category: "Exploratory" },
+        { code: "IT306", title: "Computer Oriented Statistical Methods", credits: 3, category: "Theoretical" },
+      ],
+      "Sem 4": [
+        { code: "IT401", title: "Operating Systems", credits: 3, category: "Theoretical" },
+        { code: "IT402", title: "Design and Analysis of Algorithms", credits: 3, category: "Theoretical" },
+        { code: "IT403", title: "Database Systems", credits: 4, category: "Theoretical & Practical", isTheoryPractical: true, defaultTheoryCredits: 3 },
+        { code: "IT404", title: "Advanced Java Programming", credits: 4, category: "Theoretical & Practical", isTheoryPractical: true, defaultTheoryCredits: 2 },
+        { code: "IT405", title: "English through Theatre Arts", credits: 2, category: "Practical" },
+        { code: "IT406", title: "Software Engineering", credits: 3, category: "Theoretical" },
+        { code: "IT407", title: "Integrated Project - II", credits: 1, category: "Exploratory" },
       ]
     }
   },
