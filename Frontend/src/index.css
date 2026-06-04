@@ -5,8 +5,8 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 
-/* ===== CSS VARIABLES ===== */
 :root {
+  color-scheme: dark;
   --font-main: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-display: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 
