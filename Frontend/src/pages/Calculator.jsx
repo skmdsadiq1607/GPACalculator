@@ -588,57 +588,51 @@ function GPASummary({ courses, onSave, saving, savedId, isFullyFilled, likeCount
 
       {isFullyFilled && (
         <div className="page-enter hide-on-print" style={{ 
-          margin: '0 20px 20px', 
-          padding: '16px', 
-          borderRadius: '16px', 
-          background: 'linear-gradient(145deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 100%)',
-          border: '1px solid rgba(255,255,255,0.05)',
-          boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.05), 0 8px 24px rgba(0,0,0,0.2)',
+          margin: '10px 20px 20px', 
           display: 'flex', 
-          flexDirection: 'column', 
-          gap: '12px' 
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          fontFamily: "'Dancing Script', cursive",
+          background: 'transparent'
         }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <div>
-              <div style={{ fontSize: '14px', fontWeight: 600, color: '#fff', letterSpacing: '-0.2px' }}>
-                Love this tool?
-              </div>
-              <div style={{ fontSize: '11px', color: 'var(--text-muted)', marginTop: '4px', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                 <span style={{ display: 'inline-block', width: '6px', height: '6px', borderRadius: '50%', background: '#ef4444', boxShadow: '0 0 8px #ef4444', animation: 'pulse 2s infinite' }}></span>
-                {likeCount.toLocaleString()} supporters
-              </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+            <div style={{ fontSize: '26px', color: '#fff', lineHeight: '1.2' }}>Find this tool helpful?</div>
+            <div style={{ fontSize: '26px', color: '#fff', lineHeight: '1.2' }}>Click the heart to show</div>
+            <div style={{ fontSize: '26px', color: '#f472b6', lineHeight: '1.2', display: 'flex', alignItems: 'center', gap: '8px' }}>
+              your support! ♡
             </div>
+          </div>
+          
+          <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+            {!hasLiked && (
+              <svg width="70" height="60" viewBox="0 0 100 60" fill="none" style={{ position: 'absolute', right: '65px', top: '15px' }}>
+                {/* Custom drawn double-loop spiral arrow */}
+                <path d="M 5 50 C 25 70, 40 30, 25 25 C 10 20, 5 45, 20 55 C 45 70, 70 30, 55 25 C 40 20, 35 45, 50 55 C 70 65, 85 45, 95 30" stroke="#f472b6" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M 85 28 L 95 30 L 92 40" stroke="#f472b6" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            )}
             
-            <div style={{ position: 'relative', display: 'flex', alignItems: 'center', gap: '8px' }}>
-              {!hasLiked && (
-                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" style={{ position: 'absolute', right: '52px', top: '6px', transform: 'rotate(10deg)', opacity: 0.6 }}>
-                   <path d="M5 12C5 12 8.5 4 15 7C21.5 10 16 19 16 19" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" strokeDasharray="2 2"/>
-                   <path d="M12 18L16 19L17 15" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+            <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
+              {showShower && <HeartShower />}
+              <button 
+                onClick={onLike}
+                disabled={hasLiked}
+                style={{
+                  background: '#fff',
+                  border: 'none',
+                  borderRadius: '50%',
+                  width: '56px', height: '56px',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  cursor: hasLiked ? 'default' : 'pointer',
+                  boxShadow: hasLiked ? '0 0 25px rgba(244,114,182,0.8)' : '0 0 15px rgba(244,114,182,0.4)',
+                  transition: 'all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)',
+                  transform: hasLiked ? 'scale(1.1)' : 'scale(1)',
+                }}
+              >
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="#f472b6" stroke="#f472b6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ transform: 'translateY(1px)' }}>
+                  <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
                 </svg>
-              )}
-              
-              <div style={{ position: 'relative' }}>
-                {showShower && <HeartShower />}
-                <button 
-                  onClick={onLike}
-                  disabled={hasLiked}
-                  style={{
-                    background: hasLiked ? 'rgba(239,68,68,0.15)' : 'rgba(255,255,255,0.05)',
-                    border: `1px solid ${hasLiked ? 'rgba(239,68,68,0.3)' : 'rgba(255,255,255,0.1)'}`,
-                    borderRadius: '12px',
-                    width: '44px', height: '44px',
-                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    cursor: hasLiked ? 'default' : 'pointer',
-                    boxShadow: hasLiked ? '0 0 20px rgba(239,68,68,0.4)' : '0 4px 12px rgba(0,0,0,0.1)',
-                    transition: 'all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)',
-                    transform: hasLiked ? 'scale(1.05)' : 'scale(1)',
-                  }}
-                >
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill={hasLiked ? "#ef4444" : "none"} stroke={hasLiked ? "#ef4444" : "#a1a1aa"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ transition: 'all 0.3s' }}>
-                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-                  </svg>
-                </button>
-              </div>
+              </button>
             </div>
           </div>
         </div>
