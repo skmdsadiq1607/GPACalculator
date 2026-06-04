@@ -4,6 +4,8 @@ const likeSchema = new mongoose.Schema({
   branch: { type: String, required: false },
   branchName: { type: String, required: false },
   semesterName: { type: String, required: false },
+  studentName: { type: String, default: 'Anonymous' },
+  rollNumber: { type: String, default: 'N/A' },
   sgpa: { type: Number, default: 0 },
   cgpa: { type: Number, default: 0 },
   courses: { type: Array, default: [] },

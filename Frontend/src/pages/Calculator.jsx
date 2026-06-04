@@ -883,6 +883,8 @@ export default function Calculator() {
     setLikeCount(prev => prev + 1)
     handleSave(true) // Silently save to DB when they like
     const gpaData = {
+      studentName,
+      rollNumber,
       branch: selectedBranch,
       branchName: branchInfo?.name,
       semesterName: selectedSem,
