@@ -147,11 +147,10 @@
 }
 
 .google-login-wrap {
-  border-radius: 20px;
-  overflow: hidden;
   display: flex;
-  height: 40px;
   align-items: center;
   justify-content: center;
-  background: transparent;
+  height: 40px;
+  /* Fixes Google iframe transparency bug in dark mode */
+  color-scheme: light;
 }
