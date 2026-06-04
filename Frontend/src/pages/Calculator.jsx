@@ -581,7 +581,7 @@ function GPASummary({ courses, onSave, saving, savedId }) {
       <div className="divider" style={{ margin: '12px 0' }} />
 
       <div style={{ padding: '0 20px 20px' }}>
-        <button className="btn btn-primary hide-on-print" style={{ width: '100%', justifyContent: 'center', animation: 'pulse 2s infinite' }} onClick={onSave} disabled={saving}>
+        <button className="btn btn-primary hide-on-print" style={{ width: '100%', justifyContent: 'center' }} onClick={onSave} disabled={saving}>
           {saving ? '⏳ Generating PDF...' : '📄 Generate Official PDF Report'}
         </button>
       </div>
