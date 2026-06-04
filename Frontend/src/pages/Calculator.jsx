@@ -530,15 +530,7 @@ function GPASummary({ courses, onSave, saving, savedId, isFullyFilled, likeCount
           <span className="gpa-stat-label">CGPA</span>
           <span className="gpa-stat-value" style={{ color: 'var(--accent)', fontSize: '17px' }}>{cgpa > 0 ? cgpa.toFixed(2) : '—'}</span>
         </div>
-        <div className="gpa-stat">
-          <span className="gpa-stat-label">
-            Equivalent % 
-            <span title="Formula: (CGPA - 0.5) × 10 (Standard UGC/JNTU norm)" style={{ cursor: 'help', color: 'var(--text-muted)', marginLeft: '4px', fontSize: '10px' }}>
-              ⓘ
-            </span>
-          </span>
-          <span className="gpa-stat-value">{cgpa > 0 ? `${percentage}%` : '—'}</span>
-        </div>
+
         <div className="gpa-stat">
           <span className="gpa-stat-label">Credits Graded</span>
           <span className="gpa-stat-value">{gradedCredits} / {totalCredits}</span>
