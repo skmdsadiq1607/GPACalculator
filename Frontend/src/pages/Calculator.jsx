@@ -492,7 +492,7 @@ function CourseCard({ course, onChange }) {
 // ============================================================
 // GPA SUMMARY SIDEBAR
 // ============================================================
-function GPASummary({ courses, onSave, saving, savedId, isFullyFilled, likeCount, hasLiked, onLike }) {
+function GPASummary({ courses, onSave, saving, savedId, isFullyFilled, likeCount, hasLiked, onLike, showShower }) {
   // Build grade-compatible courses for calculation
   const gradeableCourses = courses.map(toCourseForSGPA)
   const sgpa = calculateSGPA(gradeableCourses)
@@ -989,6 +989,7 @@ export default function Calculator() {
             likeCount={likeCount}
             hasLiked={hasLiked}
             onLike={handleLike}
+            showShower={showShower}
           />
         </div>
       </div>
