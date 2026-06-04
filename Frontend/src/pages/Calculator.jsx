@@ -829,7 +829,7 @@ export default function Calculator() {
       const pCie = (Number(c.practical?.mid1) || Number(c.practical?.dayToDay) || 0) + (Number(c.practical?.mid2) || Number(c.practical?.skillTest) || 0)
       return tCie > 0 && pCie > 0
     }
-    const cie = (Number(c.mid1) || 0) + (Number(c.mid2) || 0) + (Number(c.assignment) || 0)
+    const cie = (Number(c.mid1) || 0) + (Number(c.mid2) || 0) + (Number(c.assignment) || 0) + (Number(c.dayToDay) || 0) + (Number(c.skillTest) || 0)
     return cie > 0
   })
 
