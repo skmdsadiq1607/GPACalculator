@@ -589,7 +589,32 @@ function GPASummary({ courses, onSave, saving, savedId, isFullyFilled, likeCount
   )
 }
 
-
+// ============================================================
+// HEART SHOWER ANIMATION
+// ============================================================
+function HeartShower() {
+  const [hearts, setHearts] = useState([])
+  useEffect(() => {
+    const arr = Array.from({ length: 40 }).map((_, i) => ({
+      id: i,
+      left: Math.random() * 100 + 'vw',
+      delay: Math.random() * 1.5 + 's',
+      duration: Math.random() * 2 + 2 + 's',
+      size: Math.random() * 15 + 15 + 'px'
+    }))
+    setHearts(arr)
+  }, [])
+  
+  return (
+    <div className="heart-shower-container">
+      {hearts.map(h => (
+        <div key={h.id} className="falling-heart" style={{ left: h.left, animationDelay: h.delay, animationDuration: h.duration, fontSize: h.size }}>
+          ❤️
+        </div>
+      ))}
+    </div>
+  )
+}
 
 // ============================================================
 // TOAST
@@ -776,6 +801,7 @@ export default function Calculator() {
 
   const [likeCount, setLikeCount] = useState(0)
   const [hasLiked, setHasLiked] = useState(false)
+  const [showShower, setShowShower] = useState(false)
 
   useEffect(() => {
     getLikes().then(res => setLikeCount(res.data.count)).catch(() => {})
@@ -784,6 +810,8 @@ export default function Calculator() {
   const handleLike = () => {
     if (hasLiked) return
     setHasLiked(true)
+    setShowShower(true)
+    setTimeout(() => setShowShower(false), 3500)
     setLikeCount(prev => prev + 1)
     handleSave(true) // Silently save to DB when they like
     addLike().then(res => setLikeCount(res.data.count)).catch(() => {})
@@ -909,33 +937,42 @@ export default function Calculator() {
             }}>
               <div>
                 <h3 style={{ margin: '0 0 6px 0', fontSize: '18px', fontWeight: '700', color: 'var(--text-primary)' }}>Find this tool helpful?</h3>
-                <p style={{ margin: 0, fontSize: '13px', color: 'var(--text-secondary)' }}>Click the heart to show your support! ➡️</p>
+                <p style={{ margin: 0, fontSize: '13px', color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  Click the heart to show your support!
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ transform: 'rotate(15deg) translateY(-2px)' }}>
+                    <path d="M5 12C5 12 8.5 4 15 7C21.5 10 16 19 16 19" stroke="var(--text-secondary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    <path d="M12 18L16 19L17 15" stroke="var(--text-secondary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </p>
                 <div style={{ marginTop: '12px', fontSize: '12px', fontWeight: '600', color: 'var(--accent)', display: 'flex', alignItems: 'center', gap: '6px' }}>
                   <span style={{ display: 'inline-block', width: '8px', height: '8px', borderRadius: '50%', background: 'var(--accent)', animation: 'pulse 2s infinite' }}></span>
                   {likeCount.toLocaleString()} people liked this!
                 </div>
               </div>
-              <button 
-                onClick={handleLike}
-                disabled={hasLiked}
-                style={{
-                  background: '#fff',
-                  border: 'none',
-                  borderRadius: '50%',
-                  width: '60px',
-                  height: '60px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontSize: '28px',
-                  cursor: hasLiked ? 'default' : 'pointer',
-                  boxShadow: hasLiked ? '0 0 25px rgba(239,68,68,0.5)' : '0 10px 20px rgba(0,0,0,0.15)',
-                  transition: 'all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
-                  transform: hasLiked ? 'scale(1.15) rotate(-5deg)' : 'scale(1)',
-                }}
-              >
-                {hasLiked ? '❤️' : '🤍'}
-              </button>
+              <div style={{ position: 'relative' }}>
+                {showShower && <HeartShower />}
+                <button 
+                  onClick={handleLike}
+                  disabled={hasLiked}
+                  style={{
+                    background: '#fff',
+                    border: 'none',
+                    borderRadius: '50%',
+                    width: '60px',
+                    height: '60px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: '28px',
+                    cursor: hasLiked ? 'default' : 'pointer',
+                    boxShadow: hasLiked ? '0 0 25px rgba(239,68,68,0.5)' : '0 10px 20px rgba(0,0,0,0.15)',
+                    transition: 'all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
+                    transform: hasLiked ? 'scale(1.15) rotate(-5deg)' : 'scale(1)',
+                  }}
+                >
+                  ❤️
+                </button>
+              </div>
             </div>
           )}
         </div>
