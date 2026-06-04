@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, Fragment } from 'react'
 import { useSearchParams, useParams, useNavigate } from 'react-router-dom'
-import { saveRecord, getRecord, updateRecord } from '../api'
+import { saveRecord, getRecord, updateRecord, getLikes, addLike } from '../api'
 import { calculateSGPA, calculateCGPA, getClassification, cgpaToPercentage, BRANCH_INFO, GRADE_POINTS } from '../utils'
 import { curriculum as localCurriculum } from '../data/curriculum'
 import html2pdf from 'html2pdf.js'
@@ -492,7 +492,7 @@ function CourseCard({ course, onChange }) {
 // ============================================================
 // GPA SUMMARY SIDEBAR
 // ============================================================
-function GPASummary({ courses, onSave, saving, savedId }) {
+function GPASummary({ courses, onSave, saving, savedId, isFullyFilled, likeCount, hasLiked, onLike }) {
   // Build grade-compatible courses for calculation
   const gradeableCourses = courses.map(toCourseForSGPA)
   const sgpa = calculateSGPA(gradeableCourses)
@@ -580,8 +580,42 @@ function GPASummary({ courses, onSave, saving, savedId }) {
 
       <div className="divider" style={{ margin: '12px 0' }} />
 
+      {isFullyFilled && (
+        <div style={{ padding: '0 20px 16px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }} className="page-enter hide-on-print">
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <span style={{ fontSize: '13px', color: 'var(--text-secondary)', fontWeight: '600' }}>
+              Like this calculator? ➡️
+            </span>
+            <button 
+              onClick={onLike}
+              disabled={hasLiked}
+              style={{
+                background: '#fff',
+                border: '1px solid #e5e7eb',
+                borderRadius: '50%',
+                width: '44px',
+                height: '44px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: '20px',
+                cursor: hasLiked ? 'default' : 'pointer',
+                boxShadow: hasLiked ? '0 0 15px rgba(239,68,68,0.4)' : '0 4px 6px rgba(0,0,0,0.1)',
+                transition: 'all 0.3s ease',
+                transform: hasLiked ? 'scale(1.1)' : 'scale(1)',
+              }}
+            >
+              {hasLiked ? '❤️' : '🤍'}
+            </button>
+          </div>
+          <div style={{ fontSize: '11px', color: 'var(--text-muted)' }}>
+            {likeCount.toLocaleString()} people liked this!
+          </div>
+        </div>
+      )}
+
       <div style={{ padding: '0 20px 20px' }}>
-        <button className="btn btn-primary hide-on-print" style={{ width: '100%', justifyContent: 'center' }} onClick={onSave} disabled={saving}>
+        <button className="btn btn-primary hide-on-print" style={{ width: '100%', justifyContent: 'center' }} onClick={() => onSave(false)} disabled={saving}>
           {saving ? '⏳ Generating PDF...' : '📄 Generate Official PDF Report'}
         </button>
       </div>
@@ -774,27 +808,30 @@ export default function Calculator() {
     }
   }
 
-  // Silent Auto-Save
+  const [likeCount, setLikeCount] = useState(0)
+  const [hasLiked, setHasLiked] = useState(false)
+
   useEffect(() => {
-    if (!courses || courses.length === 0) return
+    getLikes().then(res => setLikeCount(res.data.count)).catch(() => {})
+  }, [])
 
-    const isFullyFilled = courses.every(c => {
-      if (c.isTheoryPractical) {
-        const tCie = (Number(c.theory?.mid1) || 0) + (Number(c.theory?.mid2) || 0) + (Number(c.theory?.assignment) || 0)
-        const pCie = (Number(c.practical?.mid1) || Number(c.practical?.dayToDay) || 0) + (Number(c.practical?.mid2) || Number(c.practical?.skillTest) || 0)
-        return tCie > 0 && pCie > 0
-      }
-      const cie = (Number(c.mid1) || 0) + (Number(c.mid2) || 0) + (Number(c.assignment) || 0)
-      return cie > 0
-    })
+  const handleLike = () => {
+    if (hasLiked) return
+    setHasLiked(true)
+    setLikeCount(prev => prev + 1)
+    handleSave(true) // Silently save to DB when they like
+    addLike().then(res => setLikeCount(res.data.count)).catch(() => {})
+  }
 
-    if (isFullyFilled) {
-      const timer = setTimeout(() => {
-        handleSave(true)
-      }, 4000)
-      return () => clearTimeout(timer)
+  const isFullyFilled = courses.length > 0 && courses.every(c => {
+    if (c.isTheoryPractical) {
+      const tCie = (Number(c.theory?.mid1) || 0) + (Number(c.theory?.mid2) || 0) + (Number(c.theory?.assignment) || 0)
+      const pCie = (Number(c.practical?.mid1) || Number(c.practical?.dayToDay) || 0) + (Number(c.practical?.mid2) || Number(c.practical?.skillTest) || 0)
+      return tCie > 0 && pCie > 0
     }
-  }, [courses])
+    const cie = (Number(c.mid1) || 0) + (Number(c.mid2) || 0) + (Number(c.assignment) || 0)
+    return cie > 0
+  })
 
   const generatePDF = async () => {
     try {
@@ -900,6 +937,10 @@ export default function Calculator() {
             onSave={handleSave}
             saving={saving}
             savedId={savedId}
+            isFullyFilled={isFullyFilled}
+            likeCount={likeCount}
+            hasLiked={hasLiked}
+            onLike={handleLike}
           />
         </div>
       </div>

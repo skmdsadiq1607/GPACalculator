@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const GpaRecord = require('../models/GpaRecord');
+const Stat = require('../models/Stat');
 const { curriculum, gradingScale } = require('../data/curriculum');
 const { OAuth2Client } = require('google-auth-library');
 
@@ -103,6 +104,34 @@ router.delete('/records/:id', async (req, res) => {
   try {
     await GpaRecord.findByIdAndDelete(req.params.id);
     res.json({ message: 'Record deleted successfully' });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// GET /api/likes - get total likes
+router.get('/likes', async (req, res) => {
+  try {
+    let stat = await Stat.findOne({ name: 'likes' });
+    if (!stat) {
+      stat = new Stat({ name: 'likes', count: 0 });
+      await stat.save();
+    }
+    res.json({ count: stat.count });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// POST /api/likes - increment likes
+router.post('/likes', async (req, res) => {
+  try {
+    const stat = await Stat.findOneAndUpdate(
+      { name: 'likes' },
+      { $inc: { count: 1 } },
+      { new: true, upsert: true }
+    );
+    res.json({ count: stat.count });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
