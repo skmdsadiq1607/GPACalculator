@@ -145,3 +145,13 @@
   background: rgba(255, 91, 91, 0.1);
   color: #ff5b5b;
 }
+
+.google-login-wrap {
+  border-radius: 20px;
+  overflow: hidden;
+  display: flex;
+  height: 40px;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+}
