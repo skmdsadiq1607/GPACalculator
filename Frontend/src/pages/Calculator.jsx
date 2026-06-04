@@ -916,7 +916,7 @@ export default function Calculator() {
                 </div>
               </div>
               <button 
-                onClick={onLike}
+                onClick={handleLike}
                 disabled={hasLiked}
                 style={{
                   background: '#fff',
