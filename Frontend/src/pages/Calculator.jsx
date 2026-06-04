@@ -581,44 +581,15 @@ function GPASummary({ courses, onSave, saving, savedId }) {
       <div className="divider" style={{ margin: '12px 0' }} />
 
       <div style={{ padding: '0 20px 20px' }}>
-        <button className="btn btn-primary hide-on-print" style={{ width: '100%', justifyContent: 'center' }} onClick={onSave} disabled={saving}>
-          {saving ? '⏳ Saving...' : savedId ? '💾 Update Record' : '💾 Save Record'}
+        <button className="btn btn-primary hide-on-print" style={{ width: '100%', justifyContent: 'center', animation: 'pulse 2s infinite' }} onClick={onSave} disabled={saving}>
+          {saving ? '⏳ Generating PDF...' : '📄 Generate Official PDF Report'}
         </button>
       </div>
     </div>
   )
 }
 
-// ============================================================
-// SAVE MODAL
-// ============================================================
-function SaveModal({ show, onClose, onSave, studentName, setStudentName, rollNumber, setRollNumber, saving }) {
-  if (!show) return null;
-  return (
-    <div className="modal-overlay page-enter" onClick={onClose}>
-      <div className="modal" onClick={e => e.stopPropagation()}>
-        <h2 className="modal-title">💾 Save Record</h2>
-        <p className="modal-subtitle">Save your predicted GPA to MongoDB for future reference.</p>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-          <div className="input-group">
-            <label className="input-label">Student Name (For PDF)</label>
-            <input id="save-name" className="input" placeholder="e.g., Sadiq Mohammed" value={studentName} onChange={e => setStudentName(e.target.value)} />
-          </div>
-          <div className="input-group">
-            <label className="input-label">Roll Number (optional)</label>
-            <input id="save-roll" className="input" placeholder="e.g., 23BCS0001" value={rollNumber} onChange={e => setRollNumber(e.target.value)} />
-          </div>
-        </div>
-        <div className="modal-actions">
-          <button className="btn btn-ghost flex-1" onClick={onClose} disabled={saving}>Cancel</button>
-          <button className="btn btn-primary flex-1" onClick={onSave} disabled={saving || !studentName.trim()}>
-            {saving ? '⏳ Saving...' : '💾 Save & Get PDF'}
-          </button>
-        </div>
-      </div>
-    </div>
-  )
-}
+
 
 // ============================================================
 // TOAST
@@ -701,7 +672,6 @@ export default function Calculator() {
   const [loading, setLoading] = useState(false)
   const [saving, setSaving] = useState(false)
   const [savedId, setSavedId] = useState(recordId || null)
-  const [showModal, setShowModal] = useState(false)
   const [studentName, setStudentName] = useState('Student')
   const [rollNumber, setRollNumber] = useState('')
   const [toast, setToast] = useState(null)
@@ -728,6 +698,14 @@ export default function Calculator() {
       }).finally(() => {
         setLoading(false)
       })
+    } else {
+      try {
+        const user = JSON.parse(localStorage.getItem('gpa_user'))
+        if (user) {
+          setStudentName(user.name || 'Anonymous Student')
+          setRollNumber(user.email ? user.email.split('@')[0].toUpperCase() : 'N/A')
+        }
+      } catch (e) {}
     }
   }, [recordId])
 
@@ -747,7 +725,7 @@ export default function Calculator() {
     })
   }, [])
 
-  const handleSave = async () => {
+  const handleSave = async (silent = false) => {
     const gradeableCourses = courses.map(toCourseForSGPA)
     const sgpa = calculateSGPA(gradeableCourses)
     const cgpa = calculateCGPA([{ courses: gradeableCourses }])
@@ -775,24 +753,40 @@ export default function Calculator() {
       cgpa,
     }
 
-    setSaving(true)
+    if (!silent) setSaving(true)
     try {
       if (savedId) {
         await updateRecord(savedId, payload)
-        showToast('Record updated!', 'success')
-        setShowModal(false)
-        await generatePDF()
+        if (!silent) {
+          showToast('Record updated!', 'success')
+          await generatePDF()
+        }
       } else {
         const res = await saveRecord(payload)
-        setShowModal(false)
-        await generatePDF()
         setSavedId(res.data._id)
-        showToast('Record saved!', 'success')
-        navigate(`/calculator/${res.data._id}`, { replace: true })
+        if (!silent) {
+          await generatePDF()
+          showToast('Record saved!', 'success')
+          navigate(`/calculator/${res.data._id}`, { replace: true })
+        }
       }
-    } catch { showToast('Could not save — is the server running?', 'error') }
-    finally { setSaving(false) }
+    } catch {
+      if (!silent) showToast('Could not save — is the server running?', 'error')
+    } finally {
+      if (!silent) setSaving(false)
+    }
   }
+
+  // Silent Auto-Save
+  useEffect(() => {
+    const hasMarks = courses.some(c => c.theory?.cie > 0 || c.practical?.cie > 0 || c.cie > 0)
+    if (hasMarks) {
+      const timer = setTimeout(() => {
+        handleSave(true)
+      }, 4000)
+      return () => clearTimeout(timer)
+    }
+  }, [courses])
 
   const generatePDF = async () => {
     try {
@@ -867,9 +861,9 @@ export default function Calculator() {
         </div>
 
       <div className="hide-on-print" style={{ padding: '16px', borderRadius: '10px', background: 'rgba(250,200,0,0.04)', border: '1px solid var(--accent-border)', fontSize: '12px', color: 'var(--text-secondary)', marginBottom: '24px', display: 'flex', flexDirection: 'column', gap: '12px', overflow: 'hidden' }}>
-        <span style={{ wordWrap: 'break-word', whiteSpace: 'normal' }}>📝 <strong style={{ color: 'var(--accent)' }}>CIE</strong> = Mid-1 (/20) + Mid-2 (/20) + Assignment (/10) = max 50</span>
-        <span style={{ wordWrap: 'break-word', whiteSpace: 'normal' }}>📄 <strong style={{ color: 'var(--accent)' }}>SEE</strong> = End exam out of 50</span>
-        <span style={{ wordWrap: 'break-word', whiteSpace: 'normal' }}>🎯 <strong style={{ color: 'var(--accent)' }}>Total</strong> = CIE + SEE out of 100 → grade determined</span>
+        <span style={{ wordWrap: 'break-word', whiteSpace: 'normal' }}>📝 <strong style={{ color: 'var(--accent)' }}>CIE</strong> = Continuous Internal Evaluation (Max 50 Marks)</span>
+        <span style={{ wordWrap: 'break-word', whiteSpace: 'normal' }}>📄 <strong style={{ color: 'var(--accent)' }}>SEE</strong> = Semester End Examination (Max 50 Marks)</span>
+        <span style={{ wordWrap: 'break-word', whiteSpace: 'normal' }}>🎯 <strong style={{ color: 'var(--accent)' }}>Total</strong> = CIE + SEE (Max 100 Marks) → Grade determined</span>
       </div>
 
       <PrintableScorecard courses={courses} sgpa={calculateSGPA(courses.map(toCourseForSGPA))} />
@@ -895,19 +889,13 @@ export default function Calculator() {
         <div>
           <GPASummary
             courses={courses}
-            onSave={() => setShowModal(true)}
+            onSave={handleSave}
             saving={saving}
             savedId={savedId}
           />
         </div>
       </div>
       </div>
-
-      <SaveModal
-        show={showModal} onClose={() => setShowModal(false)} onSave={handleSave}
-        studentName={studentName} setStudentName={setStudentName}
-        rollNumber={rollNumber} setRollNumber={setRollNumber}
-      />
 
       {toast && <Toast message={toast.message} type={toast.type} onDismiss={() => setToast(null)} />}
     </div>
