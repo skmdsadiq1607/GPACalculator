@@ -125,7 +125,7 @@ export default function App() {
                 )}
               </div>
             ) : (
-              <div style={{ transform: 'scale(0.85)', transformOrigin: 'right' }}>
+              <div style={{ transform: 'scale(0.85)', transformOrigin: 'right', borderRadius: '20px', overflow: 'hidden', height: '40px', display: 'flex', alignItems: 'center', justifyContent: 'center', colorScheme: 'light' }}>
                 <GoogleLogin
                   onSuccess={handleSuccess}
                   onError={() => console.error('Login Failed')}
