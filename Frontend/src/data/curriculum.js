@@ -205,19 +205,23 @@ const curriculum = {
       "Sem 3": [
         { code: "IT301", title: "Discrete Mathematics", credits: 3, category: "Theoretical" },
         { code: "IT302", title: "Computer Organization", credits: 3, category: "Theoretical" },
-        { code: "IT303", title: "Data Structures and Algorithms", credits: 5, category: "Theoretical & Practical", isTheoryPractical: true, defaultTheoryCredits: 3 },
-        { code: "IT304", title: "Object Oriented Programming through Java", credits: 5, category: "Theoretical & Practical", isTheoryPractical: true, defaultTheoryCredits: 3 },
+        { code: "IT303", title: "Data Structures and Algorithms", credits: 3, category: "Theoretical" },
+        { code: "IT304", title: "Object Oriented Programming through Java", credits: 3, category: "Theoretical" },
         { code: "IT305", title: "Integrated Project - I", credits: 1, category: "Exploratory" },
         { code: "IT306", title: "Computer Oriented Statistical Methods", credits: 3, category: "Theoretical" },
+        { code: "IT307", title: "Data Structures and Algorithms Lab", credits: 2, category: "Practical" },
+        { code: "IT308", title: "Object Oriented Programming through Java Lab", credits: 2, category: "Practical" },
       ],
       "Sem 4": [
         { code: "IT401", title: "Operating Systems", credits: 3, category: "Theoretical" },
         { code: "IT402", title: "Design and Analysis of Algorithms", credits: 3, category: "Theoretical" },
-        { code: "IT403", title: "Database Systems", credits: 4, category: "Theoretical & Practical", isTheoryPractical: true, defaultTheoryCredits: 3 },
-        { code: "IT404", title: "Advanced Java Programming", credits: 4, category: "Theoretical & Practical", isTheoryPractical: true, defaultTheoryCredits: 2 },
+        { code: "IT403", title: "Database Systems", credits: 3, category: "Theoretical" },
+        { code: "IT404", title: "Advanced Java Programming", credits: 2, category: "Theoretical" },
         { code: "IT405", title: "English through Theatre Arts", credits: 2, category: "Practical" },
         { code: "IT406", title: "Software Engineering", credits: 3, category: "Theoretical" },
-        { code: "IT407", title: "Integrated Project - II", credits: 1, category: "Exploratory" },
+        { code: "IT407", title: "Database Systems Lab", credits: 1, category: "Practical" },
+        { code: "IT408", title: "Advanced Java Programming Lab", credits: 2, category: "Practical" },
+        { code: "IT409", title: "Integrated Project - II", credits: 1, category: "Exploratory" },
       ]
     }
   },
