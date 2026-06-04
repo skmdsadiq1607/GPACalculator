@@ -600,18 +600,29 @@ function GPASummary({ courses, onSave, saving, savedId, isFullyFilled, likeCount
 // LIKE BANNER COMPONENT
 // ============================================================
 function LikeBanner({ hasLiked, onLike, showShower, likeCount, scale = 1 }) {
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 650);
+  
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth <= 650);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const finalScale = isMobile && scale === 1 ? 0.55 : scale;
+
   return (
-    <div className="page-enter hide-on-print" style={{ 
-      margin: '10px auto', 
-      display: 'flex', 
-      justifyContent: 'center',
-      alignItems: 'center',
-      fontFamily: "'Dancing Script', cursive",
-      width: 'fit-content',
-      transform: `scale(${scale})`,
-      transformOrigin: 'top center'
-    }}>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+    <div style={{ width: '100%', overflow: 'hidden', display: 'flex', justifyContent: 'center' }}>
+      <div className="page-enter hide-on-print" style={{ 
+        margin: '20px 0', 
+        display: 'flex', 
+        justifyContent: 'center',
+        alignItems: 'center',
+        fontFamily: "'Dancing Script', cursive",
+        width: 'fit-content',
+        transform: `scale(${finalScale})`,
+        transformOrigin: 'center center'
+      }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
         <div style={{ fontSize: '32px', color: '#fff', lineHeight: '1.2' }}>Find this tool helpful?</div>
         <div style={{ fontSize: '32px', color: '#fff', lineHeight: '1.2' }}>Click the heart to show</div>
         <div style={{ fontSize: '32px', color: '#f472b6', lineHeight: '1.2', display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -646,6 +657,7 @@ function LikeBanner({ hasLiked, onLike, showShower, likeCount, scale = 1 }) {
         <div style={{ marginTop: '16px', fontSize: '20px', color: '#f472b6', textAlign: 'center', whiteSpace: 'nowrap', position: 'absolute', top: '100%', fontWeight: 600 }}>
           {likeCount.toLocaleString()} people liked this!
         </div>
+      </div>
       </div>
     </div>
   )
