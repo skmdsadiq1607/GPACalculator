@@ -112,9 +112,36 @@ export default function Home() {
                 SGPA = Σ (Course Credits × Grade Points) / Σ (Course Credits)
               </span>
             </div>
-            <p>
-              <strong>Grade Points:</strong> Outstanding (O) = 10, Excellent (A+) = 9, Very Good (A) = 8, Good (B+) = 7, Above Average (B) = 6, Average (C) = 5, Pass (P) = 4, Fail (F) = 0.
-            </p>
+            <div style={{ overflowX: 'auto', marginTop: '8px' }}>
+              <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '14px', textAlign: 'center', background: 'rgba(0,0,0,0.2)', borderRadius: '12px', overflow: 'hidden', border: '1px solid rgba(255,255,255,0.05)' }}>
+                <thead>
+                  <tr style={{ background: 'rgba(255,255,255,0.05)', color: 'var(--text-primary)' }}>
+                    <th colSpan="2" style={{ padding: '12px 16px', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>Letter Grade</th>
+                    <th style={{ padding: '12px 16px', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>Grade Points</th>
+                    <th style={{ padding: '12px 16px', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>% Marks secured Range</th>
+                  </tr>
+                </thead>
+                <tbody style={{ color: 'var(--text-secondary)' }}>
+                  {[
+                    { grade: 'O', label: 'Outstanding', pts: 10, range: '≥90 to 100' },
+                    { grade: 'A+', label: 'Excellent', pts: 9, range: '≥80 to <90' },
+                    { grade: 'A', label: 'Very Good', pts: 8, range: '≥70 to <80' },
+                    { grade: 'B+', label: 'Good', pts: 7, range: '≥60 to <70' },
+                    { grade: 'B', label: 'Average', pts: 6, range: '≥50 to <60' },
+                    { grade: 'C', label: 'Pass', pts: 5, range: '≥40 to <50' },
+                    { grade: 'F', label: 'Fail', pts: 0, range: '<40' },
+                    { grade: 'Ab', label: 'Absent', pts: 0, range: '-' },
+                  ].map((row, idx) => (
+                    <tr key={row.grade} style={{ borderBottom: idx !== 7 ? '1px solid rgba(255,255,255,0.03)' : 'none' }}>
+                      <td style={{ padding: '10px 16px', fontWeight: 'bold', color: 'var(--text-primary)', borderRight: '1px solid rgba(255,255,255,0.03)' }}>{row.grade}</td>
+                      <td style={{ padding: '10px 16px', borderRight: '1px solid rgba(255,255,255,0.03)' }}>{row.label}</td>
+                      <td style={{ padding: '10px 16px', fontWeight: 'bold', borderRight: '1px solid rgba(255,255,255,0.03)' }}>{row.pts}</td>
+                      <td style={{ padding: '10px 16px' }}>{row.range}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
             <p>
               Our calculator uses the official Anurag University curriculum to automatically map your subjects to their exact credit values, ensuring your predicted SGPA is 100% accurate.
             </p>
