@@ -621,8 +621,8 @@ function LikeBanner({ hasLiked, onLike, showShower, likeCount, scale = 1 }) {
       
       {!hasLiked && (
         <svg width="70" height="50" viewBox="0 0 100 60" fill="none" style={{ margin: '0 15px', transform: 'translateY(15px)' }}>
-          <path d="M 5 45 C 55 35, 60 5, 45 15 C 30 25, 40 55, 90 25" stroke="#f472b6" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
-          <path d="M 75 25 L 90 25 L 85 35" stroke="#f472b6" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+          <path d="M 5 40 C 100 -10, -20 70, 85 25" stroke="#f472b6" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+          <path d="M 70 20 L 85 25 L 75 35" stroke="#f472b6" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
         </svg>
       )}
       
@@ -632,7 +632,7 @@ function LikeBanner({ hasLiked, onLike, showShower, likeCount, scale = 1 }) {
           disabled={hasLiked}
           className={`like-btn ${hasLiked ? 'liked' : ''}`}
         >
-          <svg viewBox="0 0 32 29.6" width="34" height="34" style={{ transform: 'translateY(2px)' }}>
+          <svg viewBox="-2 -2 36 34" width="34" height="34" style={{ transform: 'translateY(2px)' }}>
             <path 
               d="M23.6,0c-3.4,0-6.3,2.7-7.6,5.6C14.7,2.7,11.8,0,8.4,0C3.8,0,0,3.8,0,8.4c0,9.4,9.5,11.9,16,21.2 c6.1-9.3,16-12.1,16-21.2C32,3.8,28.2,0,23.6,0z" 
               fill={hasLiked ? "#f472b6" : "transparent"}
