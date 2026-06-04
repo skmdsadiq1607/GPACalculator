@@ -151,6 +151,9 @@
   align-items: center;
   justify-content: center;
   height: 40px;
-  /* Fixes Google iframe transparency bug in dark mode */
   color-scheme: light;
+  border-radius: 20px;
+  overflow: hidden;
+  /* Ensures no white bleeds out */
+  background: transparent;
 }
