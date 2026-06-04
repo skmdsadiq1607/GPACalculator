@@ -585,6 +585,44 @@ function GPASummary({ courses, onSave, saving, savedId, isFullyFilled, likeCount
           {saving ? '⏳ Generating PDF...' : '📄 Generate Official PDF Report'}
         </button>
       </div>
+
+      {isFullyFilled && (
+        <div className="page-enter hide-on-print" style={{ padding: '0 20px 20px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <span style={{ fontSize: '13px', color: 'var(--text-secondary)', fontWeight: 500 }}>
+              Find this helpful?
+            </span>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ transform: 'rotate(25deg) translateY(-2px)' }}>
+              <path d="M4 12C4 12 7.5 4 14 7C20.5 10 15 19 15 19" stroke="var(--text-secondary)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+              <path d="M11 18L15 19L16 15" stroke="var(--text-secondary)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+            <div style={{ position: 'relative' }}>
+              <button 
+                onClick={onLike}
+                disabled={hasLiked}
+                style={{
+                  background: 'rgba(239,68,68,0.1)',
+                  border: '1px solid rgba(239,68,68,0.2)',
+                  borderRadius: '50%',
+                  width: '40px', height: '40px',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  fontSize: '20px',
+                  cursor: hasLiked ? 'default' : 'pointer',
+                  boxShadow: hasLiked ? '0 0 15px rgba(239,68,68,0.3)' : 'none',
+                  transition: 'all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
+                  transform: hasLiked ? 'scale(1.1) rotate(-5deg)' : 'scale(1)',
+                }}
+              >
+                ❤️
+              </button>
+            </div>
+          </div>
+          <div style={{ fontSize: '12px', fontWeight: '600', color: 'var(--accent)', display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <span style={{ display: 'inline-block', width: '6px', height: '6px', borderRadius: '50%', background: 'var(--accent)', animation: 'pulse 2s infinite' }}></span>
+            {likeCount.toLocaleString()} people liked this!
+          </div>
+        </div>
+      )}
     </div>
   )
 }
@@ -922,59 +960,6 @@ export default function Calculator() {
           <div style={{ padding: '16px 20px', borderRadius: '8px', background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)', fontSize: '13px', color: 'var(--text-secondary)', marginTop: '16px', lineHeight: '1.6' }}>
             <strong style={{ color: 'var(--text-primary)' }}>Institution Notice:</strong> Year II, III, and IV curriculum structures will be integrated upon official release by Anurag University. Current Year I matrices are strictly calibrated against the official AY 2025-26 B.Tech Curriculum Directive.
           </div>
-
-          {isFullyFilled && (
-            <div className="page-enter hide-on-print" style={{
-              marginTop: '24px',
-              padding: '24px',
-              borderRadius: '16px',
-              background: 'linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0.01))',
-              border: '1px solid rgba(255,255,255,0.1)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              boxShadow: '0 8px 32px rgba(0,0,0,0.1)'
-            }}>
-              <div>
-                <h3 style={{ margin: '0 0 6px 0', fontSize: '18px', fontWeight: '700', color: 'var(--text-primary)' }}>Find this tool helpful?</h3>
-                <p style={{ margin: 0, fontSize: '13px', color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  Click the heart to show your support!
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ transform: 'rotate(15deg) translateY(-2px)' }}>
-                    <path d="M5 12C5 12 8.5 4 15 7C21.5 10 16 19 16 19" stroke="var(--text-secondary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                    <path d="M12 18L16 19L17 15" stroke="var(--text-secondary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
-                </p>
-                <div style={{ marginTop: '12px', fontSize: '12px', fontWeight: '600', color: 'var(--accent)', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                  <span style={{ display: 'inline-block', width: '8px', height: '8px', borderRadius: '50%', background: 'var(--accent)', animation: 'pulse 2s infinite' }}></span>
-                  {likeCount.toLocaleString()} people liked this!
-                </div>
-              </div>
-              <div style={{ position: 'relative' }}>
-                {showShower && <HeartShower />}
-                <button 
-                  onClick={handleLike}
-                  disabled={hasLiked}
-                  style={{
-                    background: '#fff',
-                    border: 'none',
-                    borderRadius: '50%',
-                    width: '60px',
-                    height: '60px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    fontSize: '28px',
-                    cursor: hasLiked ? 'default' : 'pointer',
-                    boxShadow: hasLiked ? '0 0 25px rgba(239,68,68,0.5)' : '0 10px 20px rgba(0,0,0,0.15)',
-                    transition: 'all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
-                    transform: hasLiked ? 'scale(1.15) rotate(-5deg)' : 'scale(1)',
-                  }}
-                >
-                  ❤️
-                </button>
-              </div>
-            </div>
-          )}
         </div>
 
         {/* Right: GPA summary */}
