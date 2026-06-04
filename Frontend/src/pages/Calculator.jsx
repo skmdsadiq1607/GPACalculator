@@ -991,6 +991,9 @@ export default function Calculator() {
         </div>
 
       <div className="hide-on-print" style={{ padding: '16px', borderRadius: '10px', background: 'rgba(250,200,0,0.04)', border: '1px solid var(--accent-border)', fontSize: '12px', color: 'var(--text-secondary)', marginBottom: '24px', display: 'flex', flexDirection: 'column', gap: '12px', overflow: 'hidden' }}>
+        <div style={{ padding: '10px 12px', background: 'rgba(250, 200, 0, 0.1)', borderRadius: '6px', borderLeft: '3px solid var(--accent)', color: 'var(--accent)', fontWeight: '600', fontSize: '13px', marginBottom: '4px' }}>
+          ⚠️ Note: Please ensure you fill in the marks for ALL subjects. Leaving any subject blank will result in an inaccurate final SGPA!
+        </div>
         <span style={{ wordWrap: 'break-word', whiteSpace: 'normal' }}>📝 <strong style={{ color: 'var(--accent)' }}>CIE</strong> = Continuous Internal Evaluation (Max 50 Marks)</span>
         <span style={{ wordWrap: 'break-word', whiteSpace: 'normal' }}>📄 <strong style={{ color: 'var(--accent)' }}>SEE</strong> = Semester End Examination (Max 50 Marks)</span>
         <span style={{ wordWrap: 'break-word', whiteSpace: 'normal' }}>🎯 <strong style={{ color: 'var(--accent)' }}>Total</strong> = CIE + SEE (Max 100 Marks) → Grade determined</span>
