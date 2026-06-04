@@ -630,7 +630,6 @@ function LikeBanner({ hasLiked, onLike, showShower, likeCount, scale = 1 }) {
       )}
       
       <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center', marginLeft: hasLiked ? '30px' : '0' }}>
-        {showShower && <HeartShower />}
         <button 
           onClick={onLike}
           disabled={hasLiked}
@@ -1037,6 +1036,7 @@ export default function Calculator() {
       </div>
 
       {toast && <Toast message={toast.message} type={toast.type} onDismiss={() => setToast(null)} />}
+      {showShower && <HeartShower />}
     </div>
   )
 }
