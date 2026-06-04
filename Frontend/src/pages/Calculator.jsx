@@ -587,39 +587,59 @@ function GPASummary({ courses, onSave, saving, savedId, isFullyFilled, likeCount
       </div>
 
       {isFullyFilled && (
-        <div className="page-enter hide-on-print" style={{ padding: '0 20px 20px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <span style={{ fontSize: '13px', color: 'var(--text-secondary)', fontWeight: 500 }}>
-              Find this helpful?
-            </span>
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ transform: 'rotate(25deg) translateY(-2px)' }}>
-              <path d="M4 12C4 12 7.5 4 14 7C20.5 10 15 19 15 19" stroke="var(--text-secondary)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-              <path d="M11 18L15 19L16 15" stroke="var(--text-secondary)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-            <div style={{ position: 'relative' }}>
-              <button 
-                onClick={onLike}
-                disabled={hasLiked}
-                style={{
-                  background: 'rgba(239,68,68,0.1)',
-                  border: '1px solid rgba(239,68,68,0.2)',
-                  borderRadius: '50%',
-                  width: '40px', height: '40px',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  fontSize: '20px',
-                  cursor: hasLiked ? 'default' : 'pointer',
-                  boxShadow: hasLiked ? '0 0 15px rgba(239,68,68,0.3)' : 'none',
-                  transition: 'all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
-                  transform: hasLiked ? 'scale(1.1) rotate(-5deg)' : 'scale(1)',
-                }}
-              >
-                ❤️
-              </button>
+        <div className="page-enter hide-on-print" style={{ 
+          margin: '0 20px 20px', 
+          padding: '16px', 
+          borderRadius: '16px', 
+          background: 'linear-gradient(145deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 100%)',
+          border: '1px solid rgba(255,255,255,0.05)',
+          boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.05), 0 8px 24px rgba(0,0,0,0.2)',
+          display: 'flex', 
+          flexDirection: 'column', 
+          gap: '12px' 
+        }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div>
+              <div style={{ fontSize: '14px', fontWeight: 600, color: '#fff', letterSpacing: '-0.2px' }}>
+                Love this tool?
+              </div>
+              <div style={{ fontSize: '11px', color: 'var(--text-muted)', marginTop: '4px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                 <span style={{ display: 'inline-block', width: '6px', height: '6px', borderRadius: '50%', background: '#ef4444', boxShadow: '0 0 8px #ef4444', animation: 'pulse 2s infinite' }}></span>
+                {likeCount.toLocaleString()} supporters
+              </div>
             </div>
-          </div>
-          <div style={{ fontSize: '12px', fontWeight: '600', color: 'var(--accent)', display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <span style={{ display: 'inline-block', width: '6px', height: '6px', borderRadius: '50%', background: 'var(--accent)', animation: 'pulse 2s infinite' }}></span>
-            {likeCount.toLocaleString()} people liked this!
+            
+            <div style={{ position: 'relative', display: 'flex', alignItems: 'center', gap: '8px' }}>
+              {!hasLiked && (
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" style={{ position: 'absolute', right: '52px', top: '6px', transform: 'rotate(10deg)', opacity: 0.6 }}>
+                   <path d="M5 12C5 12 8.5 4 15 7C21.5 10 16 19 16 19" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" strokeDasharray="2 2"/>
+                   <path d="M12 18L16 19L17 15" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              )}
+              
+              <div style={{ position: 'relative' }}>
+                {showShower && <HeartShower />}
+                <button 
+                  onClick={onLike}
+                  disabled={hasLiked}
+                  style={{
+                    background: hasLiked ? 'rgba(239,68,68,0.15)' : 'rgba(255,255,255,0.05)',
+                    border: `1px solid ${hasLiked ? 'rgba(239,68,68,0.3)' : 'rgba(255,255,255,0.1)'}`,
+                    borderRadius: '12px',
+                    width: '44px', height: '44px',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    cursor: hasLiked ? 'default' : 'pointer',
+                    boxShadow: hasLiked ? '0 0 20px rgba(239,68,68,0.4)' : '0 4px 12px rgba(0,0,0,0.1)',
+                    transition: 'all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)',
+                    transform: hasLiked ? 'scale(1.05)' : 'scale(1)',
+                  }}
+                >
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill={hasLiked ? "#ef4444" : "none"} stroke={hasLiked ? "#ef4444" : "#a1a1aa"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ transition: 'all 0.3s' }}>
+                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                  </svg>
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       )}
@@ -633,12 +653,12 @@ function GPASummary({ courses, onSave, saving, savedId, isFullyFilled, likeCount
 function HeartShower() {
   const [hearts, setHearts] = useState([])
   useEffect(() => {
-    const arr = Array.from({ length: 40 }).map((_, i) => ({
+    const arr = Array.from({ length: 35 }).map((_, i) => ({
       id: i,
       left: Math.random() * 100 + 'vw',
-      delay: Math.random() * 1.5 + 's',
+      delay: Math.random() * 1.2 + 's',
       duration: Math.random() * 2 + 2 + 's',
-      size: Math.random() * 15 + 15 + 'px'
+      size: Math.random() * 12 + 14 + 'px'
     }))
     setHearts(arr)
   }, [])
@@ -646,8 +666,10 @@ function HeartShower() {
   return (
     <div className="heart-shower-container">
       {hearts.map(h => (
-        <div key={h.id} className="falling-heart" style={{ left: h.left, animationDelay: h.delay, animationDuration: h.duration, fontSize: h.size }}>
-          ❤️
+        <div key={h.id} className="falling-heart" style={{ left: h.left, animationDelay: h.delay, animationDuration: h.duration, width: h.size, height: h.size }}>
+          <svg viewBox="0 0 24 24" fill="#ef4444" stroke="#ef4444" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" style={{ width: '100%', height: '100%', filter: 'drop-shadow(0 4px 6px rgba(239,68,68,0.4))' }}>
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+          </svg>
         </div>
       ))}
     </div>
