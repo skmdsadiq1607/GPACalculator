@@ -586,7 +586,77 @@ function GPASummary({ courses, onSave, saving, savedId, isFullyFilled, likeCount
         </button>
       </div>
 
-      {/* The Like banner has been moved to the left column */}
+      {isFullyFilled && (
+        <LikeBanner 
+          hasLiked={hasLiked} 
+          onLike={onLike} 
+          showShower={showShower} 
+          likeCount={likeCount} 
+          scale={0.55} 
+        />
+      )}
+    </div>
+  )
+}
+
+// ============================================================
+// LIKE BANNER COMPONENT
+// ============================================================
+function LikeBanner({ hasLiked, onLike, showShower, likeCount, scale = 1 }) {
+  return (
+    <div className="page-enter hide-on-print" style={{ 
+      margin: '10px auto', 
+      display: 'flex', 
+      justifyContent: 'center',
+      alignItems: 'center',
+      fontFamily: "'Dancing Script', cursive",
+      width: 'fit-content',
+      transform: `scale(${scale})`,
+      transformOrigin: 'top center'
+    }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', marginRight: '110px' }}>
+        <div style={{ fontSize: '32px', color: '#fff', lineHeight: '1.2' }}>Find this tool helpful?</div>
+        <div style={{ fontSize: '32px', color: '#fff', lineHeight: '1.2' }}>Click the heart to show</div>
+        <div style={{ fontSize: '32px', color: '#f472b6', lineHeight: '1.2', display: 'flex', alignItems: 'center', gap: '8px' }}>
+          your support! ♡
+        </div>
+      </div>
+      
+      <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+        {!hasLiked && (
+          <svg width="100" height="80" viewBox="0 0 100 80" fill="none" style={{ position: 'absolute', right: '85px', top: '10px' }}>
+            <path d="M 5 60 C 30 80, 50 40, 30 35 C 10 30, 5 60, 25 70 C 55 85, 80 40, 60 35 C 40 30, 35 60, 55 70 C 80 85, 95 60, 95 40" stroke="#f472b6" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+            <path d="M 85 45 L 95 40 L 90 50" stroke="#f472b6" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+        )}
+        
+        <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          {showShower && <HeartShower />}
+          <button 
+            onClick={onLike}
+            disabled={hasLiked}
+            style={{
+              background: '#fff',
+              border: 'none',
+              borderRadius: '50%',
+              width: '76px', height: '76px',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              cursor: hasLiked ? 'default' : 'pointer',
+              boxShadow: hasLiked ? '0 0 35px rgba(244,114,182,0.8)' : '0 0 25px rgba(244,114,182,0.3)',
+              transition: 'all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)',
+              transform: hasLiked ? 'scale(1.1)' : 'scale(1)',
+            }}
+          >
+            <svg viewBox="0 0 32 29.6" width="34" height="34" style={{ transform: 'translateY(2px)' }}>
+              <path d="M23.6,0c-3.4,0-6.3,2.7-7.6,5.6C14.7,2.7,11.8,0,8.4,0C3.8,0,0,3.8,0,8.4c0,9.4,9.5,11.9,16,21.2 c6.1-9.3,16-12.1,16-21.2C32,3.8,28.2,0,23.6,0z" fill="#f472b6"/>
+            </svg>
+          </button>
+          
+          <div style={{ marginTop: '16px', fontSize: '20px', color: '#f472b6', textAlign: 'center', whiteSpace: 'nowrap', position: 'absolute', top: '100%', fontWeight: 600 }}>
+            {likeCount.toLocaleString()} people liked this!
+          </div>
+        </div>
+      </div>
     </div>
   )
 }
@@ -811,6 +881,10 @@ export default function Calculator() {
     getLikes().then(res => setLikeCount(res.data.count)).catch(() => {})
   }, [])
 
+  useEffect(() => {
+    setHasLiked(false)
+  }, [recordId, selectedSem, selectedBranch])
+
   const handleLike = () => {
     if (hasLiked) return
     setHasLiked(true)
@@ -937,54 +1011,13 @@ export default function Calculator() {
           </div>
 
           {isFullyFilled && (
-            <div className="page-enter hide-on-print" style={{ 
-              marginTop: '60px',
-              marginBottom: '60px',
-              display: 'flex', 
-              justifyContent: 'center',
-              alignItems: 'center',
-              fontFamily: "'Dancing Script', cursive",
-            }}>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', marginRight: '110px' }}>
-                <div style={{ fontSize: '32px', color: '#fff', lineHeight: '1.2' }}>Find this tool helpful?</div>
-                <div style={{ fontSize: '32px', color: '#fff', lineHeight: '1.2' }}>Click the heart to show</div>
-                <div style={{ fontSize: '32px', color: '#f472b6', lineHeight: '1.2', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  your support! ♡
-                </div>
-              </div>
-              
-              <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
-                {!hasLiked && (
-                  <svg width="100" height="80" viewBox="0 0 100 80" fill="none" style={{ position: 'absolute', right: '85px', top: '10px' }}>
-                    <path d="M 5 60 C 30 80, 50 40, 30 35 C 10 30, 5 60, 25 70 C 55 85, 80 40, 60 35 C 40 30, 35 60, 55 70 C 80 85, 95 60, 95 40" stroke="#f472b6" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
-                    <path d="M 85 45 L 95 40 L 90 50" stroke="#f472b6" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
-                )}
-                
-                <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                  {showShower && <HeartShower />}
-                  <button 
-                    onClick={handleLike}
-                    disabled={hasLiked}
-                    style={{
-                      background: '#fff',
-                      border: 'none',
-                      borderRadius: '50%',
-                      width: '76px', height: '76px',
-                      display: 'flex', alignItems: 'center', justifyContent: 'center',
-                      cursor: hasLiked ? 'default' : 'pointer',
-                      boxShadow: hasLiked ? '0 0 35px rgba(244,114,182,0.8)' : '0 0 25px rgba(244,114,182,0.3)',
-                      transition: 'all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)',
-                      transform: hasLiked ? 'scale(1.1)' : 'scale(1)',
-                    }}
-                  >
-                    <svg viewBox="0 0 32 29.6" width="34" height="34" style={{ transform: 'translateY(2px)' }}>
-                      <path d="M23.6,0c-3.4,0-6.3,2.7-7.6,5.6C14.7,2.7,11.8,0,8.4,0C3.8,0,0,3.8,0,8.4c0,9.4,9.5,11.9,16,21.2 c6.1-9.3,16-12.1,16-21.2C32,3.8,28.2,0,23.6,0z" fill="#f472b6"/>
-                    </svg>
-                  </button>
-                </div>
-              </div>
-            </div>
+            <LikeBanner 
+              hasLiked={hasLiked} 
+              onLike={handleLike} 
+              showShower={showShower} 
+              likeCount={likeCount} 
+              scale={1} 
+            />
           )}
         </div>
 
