@@ -336,7 +336,7 @@ body {
   align-items: start;
 }
 @media (max-width: 900px) {
-  .calculator-layout { grid-template-columns: 1fr; }
+  .calculator-layout { grid-template-columns: minmax(0, 1fr); }
 }
 
 /* ===== COURSE CARD (new CIE flow) ===== */
