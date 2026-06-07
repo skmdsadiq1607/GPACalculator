@@ -857,14 +857,21 @@ export default function Calculator() {
 
     if (!silent) setSaving(true)
     try {
-      const res = await saveRecord(payload)
+      let res;
+      if (savedId) {
+        res = await updateRecord(savedId, payload)
+      } else {
+        res = await saveRecord(payload)
+        setSavedId(res.data._id)
+      }
+
       if (!silent) {
         await generatePDF()
         showToast('Record saved!', 'success')
         navigate(`/calculator/${res.data._id}`, { replace: true })
       } else {
         // Even on silent save, update the URL if we didn't have one, but don't force a reload
-        if (!recordId) {
+        if (!recordId && !window.location.pathname.includes(res.data._id)) {
           window.history.replaceState(null, '', `/calculator/${res.data._id}`)
         }
       }
@@ -917,6 +924,20 @@ export default function Calculator() {
     const cie = (Number(c.mid1) || 0) + (Number(c.mid2) || 0) + (Number(c.assignment) || 0) + (Number(c.dayToDay) || 0) + (Number(c.skillTest) || 0)
     return cie > 0
   })
+
+  // Auto-save logic: debounced by 3 seconds
+  useEffect(() => {
+    if (!isFullyFilled) return
+
+    const timeoutId = setTimeout(() => {
+      // Only auto-save if all inputs are stable for 3 seconds
+      handleSave(true)
+    }, 3000)
+
+    return () => clearTimeout(timeoutId)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [courses, isFullyFilled, studentName, rollNumber])
+
 
   const generatePDF = async () => {
     try {
